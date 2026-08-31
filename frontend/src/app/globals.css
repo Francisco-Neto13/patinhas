@@ -1,0 +1,144 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-nunito);
+  --font-heading: var(--font-fredoka);
+  --color-cream: var(--cream);
+  --color-beige: var(--beige);
+  --color-bone: var(--bone);
+  --color-brown: var(--brown);
+  --color-brown-dark: var(--brown-dark);
+  --color-terracotta: var(--terracotta);
+  --color-taupe: var(--taupe);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* Paleta Patinhas — ver documentation/planejamento/FRONTEND.MD */
+  --cream: #fbf3e9;
+  --beige: #efe1d1;
+  --bone: #fffdf9;
+  --brown: #8b5e3c;
+  --brown-dark: #3d2b1f;
+  --terracotta: #d97a4d;
+  --taupe: #6b5b4e;
+
+  --background: var(--cream);
+  --foreground: var(--brown-dark);
+  --card: var(--bone);
+  --card-foreground: var(--brown-dark);
+  --popover: var(--bone);
+  --popover-foreground: var(--brown-dark);
+  --primary: var(--brown);
+  --primary-foreground: var(--bone);
+  --secondary: var(--beige);
+  --secondary-foreground: var(--brown-dark);
+  --muted: var(--beige);
+  --muted-foreground: var(--taupe);
+  --accent: var(--terracotta);
+  --accent-foreground: var(--bone);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #e4d2bc;
+  --input: #e4d2bc;
+  --ring: var(--terracotta);
+  --chart-1: var(--brown);
+  --chart-2: var(--terracotta);
+  --chart-3: var(--taupe);
+  --chart-4: var(--beige);
+  --chart-5: var(--brown-dark);
+  --radius: 1.1rem;
+  --sidebar: var(--bone);
+  --sidebar-foreground: var(--brown-dark);
+  --sidebar-primary: var(--brown);
+  --sidebar-primary-foreground: var(--bone);
+  --sidebar-accent: var(--beige);
+  --sidebar-accent-foreground: var(--brown-dark);
+  --sidebar-border: #e4d2bc;
+  --sidebar-ring: var(--terracotta);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
+  }
+}
+
+/* Pulse-ring micro-interaction: an expanding, fading ring of the element's
+   own border-radius, looping while hovered. Used on cards/icon badges to
+   give a "ping" of attention on hover, on top of the usual lift/shadow. */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgb(217 122 77 / 45%);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgb(217 122 77 / 0%);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(217 122 77 / 0%);
+  }
+}
+
+.pulse-on-hover:hover,
+.pulse-on-hover:focus-visible {
+  animation: pulse-ring 1.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-on-hover:hover,
+  .pulse-on-hover:focus-visible {
+    animation: none;
+  }
+}
