@@ -3,14 +3,17 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
-const buttonVariants = cva(
+const variantesDoBotao = cva(
   "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all duration-200 outline-none select-none hover:scale-[1.03] active:scale-95 active:not-aria-[haspopup]:translate-y-px focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        // `borda-forte` e nao `border`: num botao outline a borda E' o que o
+        // distingue de um link solto, e a WCAG 1.4.11 pede 3:1 nesse contorno.
+        // O token `--border` (decorativo, para card e divisoria) da 1.45.
         outline:
-          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+          "border-borda-forte bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:
@@ -40,16 +43,37 @@ const buttonVariants = cva(
   }
 )
 
+/**
+ * ⚠️ O cva sai embrulhado no `cn()`, e nao cru.
+ *
+ * O cva so' CONCATENA base + variante + className; quem resolve conflito e' o
+ * tailwind-merge, dentro do `cn()`. O componente <Button> abaixo ja' fazia
+ * isso, mas os links da pagina chamam `buttonVariants({...})` direto no
+ * `className` de um <a> — e ali nao passava por merge nenhum.
+ *
+ * O sintoma era silencioso: a base traz `border-transparent` e a variante
+ * `outline` traz `border-borda-forte`. Sem merge, as duas classes iam juntas
+ * para o HTML e quem decidia era a ordem no arquivo de CSS — que deu
+ * transparente. Resultado: todo botao outline da pagina ficou SEM borda
+ * visivel, que e' justamente o contorno exigido pela WCAG 1.4.11.
+ *
+ * Mesclar aqui conserta os quatro pontos de chamada de uma vez, e o proximo
+ * <a> estilizado como botao ja' nasce certo.
+ */
+function buttonVariants(props?: Parameters<typeof variantesDoBotao>[0]) {
+  return cn(variantesDoBotao(props));
+}
+
 function Button({
   className,
   variant = "default",
   size = "default",
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+}: ButtonPrimitive.Props & VariantProps<typeof variantesDoBotao>) {
   return (
     <ButtonPrimitive
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={buttonVariants({ variant, size, className })}
       {...props}
     />
   )
