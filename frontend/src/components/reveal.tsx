@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 
 const variants: Variants = {
@@ -17,8 +17,35 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
+  const movimentoReduzido = useReducedMotion();
+
+  /*
+   * ⚠️ Quem pediu menos movimento não recebe uma animação mais curta: recebe
+   * uma <div> comum.
+   *
+   * Só apagar a transição não bastaria — o elemento nasce em `opacity: 0` e
+   * quem faz ele aparecer é a própria animação. Sem ela, o conteúdo sumiria.
+   * Por isso aqui o wrapper de movimento sai inteiro do caminho.
+   *
+   * `useReducedMotion` responde tanto ao `prefers-reduced-motion` do sistema
+   * quanto ao MotionConfig que a barra de acessibilidade controla, então este
+   * único ponto atende as duas origens.
+   */
+  if (movimentoReduzido) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
+      // ⚠️ Marca para o <noscript> do layout.
+      //
+      // O HTML servido traz 39 elementos com `opacity:0` — é assim que o
+      // Framer Motion prepara o estado inicial. Quem faz eles aparecerem é o
+      // JavaScript. Se ele não rodar (falha de rede, bloqueio, navegador
+      // antigo), a página fica praticamente em branco: o conteúdo está no
+      // HTML, mas invisível. O seletor `[data-reveal]` no <noscript>
+      // devolve tudo ao normal nesse caso.
+      data-reveal=""
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}

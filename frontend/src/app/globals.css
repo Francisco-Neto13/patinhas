@@ -15,6 +15,8 @@
   --color-brown: var(--brown);
   --color-brown-dark: var(--brown-dark);
   --color-terracotta: var(--terracotta);
+  --color-terracotta-text: var(--terracotta-text);
+  --color-borda-forte: var(--borda-forte);
   --color-taupe: var(--taupe);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -62,6 +64,14 @@
   --brown: #8b5e3c;
   --brown-dark: #3d2b1f;
   --terracotta: #d97a4d;
+  /* ⚠️ O terracotta da marca (#d97a4d) tem contraste 2.79 sobre o creme —
+     reprova nos dois limites da WCAG AA (4.5 para texto, 3.0 para icone).
+     Ele continua valendo para preenchimento grande, onde nao ha limite:
+     blobs do hero, gradiente do card, fundo de hover.
+     Este e' o mesmo matiz escurecido ate' passar: 4.60 no creme, 4.98 no
+     bone, 3.70 no pior caso (icone sobre badge terracotta/15 em bege).
+     Use -text sempre que a cor virar texto ou icone. */
+  --terracotta-text: #a35c3a;
   --taupe: #6b5b4e;
 
   --background: var(--cream);
@@ -78,9 +88,25 @@
   --muted-foreground: var(--taupe);
   --accent: var(--terracotta);
   --accent-foreground: var(--bone);
-  --destructive: oklch(0.577 0.245 27.325);
+  /* O vermelho que vem do shadcn (#e7000b) da 4.34 sobre o creme — reprova
+     por pouco no minimo de 4.5 da WCAG AA, justamente na cor que anuncia erro
+     de formulario. Este passa com folga: 6.43 no bone, 5.94 no creme. */
+  --destructive: #b3261e;
   --border: #e4d2bc;
-  --input: #e4d2bc;
+  /* ⚠️ Duas bordas, porque elas tem trabalhos diferentes.
+
+     A WCAG 1.4.11 exige 3:1 do contorno que e' NECESSARIO para identificar um
+     componente — nao de toda linha da tela. A borda de card e' decorativa (o
+     card ja' se distingue pelo fundo e pela sombra) e fica isenta: `--border`
+     continua clarinha, e a identidade visual nao muda.
+
+     Ja' a borda de um campo de formulario e' a unica coisa que diz onde
+     comeca o campo, e a de um botao outline e' o que o separa de um link
+     solto. Essas usam `--borda-forte`: e' o mesmo matiz da marca clareado ate'
+     o limite — 4.17 no bone, 3.85 no creme, 3.30 no bege. Um tom mais claro
+     ja' reprovaria. */
+  --borda-forte: #9c7256;
+  --input: var(--borda-forte);
   --ring: var(--terracotta);
   --chart-1: var(--brown);
   --chart-2: var(--terracotta);
@@ -107,6 +133,24 @@
   }
   html {
     @apply font-sans scroll-smooth;
+  }
+  /* ⚠️ O Tailwind 4 mudou o padrao: no preflight dele, <button> passou a usar
+     `cursor: default` em vez de `pointer`, para bater com o comportamento
+     nativo do navegador.
+
+     O efeito colateral e que TODO botao do site parava de sinalizar que e
+     clicavel — o de acessibilidade, o de enviar mensagem, os toggles, o menu
+     do celular. Os <a> nao sofreram, porque neles o pointer vem do navegador,
+     e e por isso que so alguns cliques pareciam "mortos".
+
+     Resolver aqui, na base, vale para os botoes que existem e para os
+     proximos. Espalhar `cursor-pointer` classe a classe deixaria o proximo
+     botao nascer errado de novo.
+
+     `:not(:disabled)` porque botao desabilitado nao deve convidar ao clique. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    @apply cursor-pointer;
   }
   h1,
   h2,
@@ -141,4 +185,111 @@
   .pulse-on-hover:focus-visible {
     animation: none;
   }
+}
+/* ============================================================
+   Preferências de acessibilidade
+   ============================================================
+   As três preferências da barra vivem como atributos no <html>
+   (`data-contraste`, `data-fonte`, `data-movimento`), escritos antes da
+   primeira pintura pelo script inline do layout.
+
+   ⚠️ Elas mudam TOKENS, não componentes. Como toda a interface já lê as
+   cores de variáveis CSS, o alto contraste é este bloco e mais nada — não
+   há uma segunda folha de estilo nem classe condicional espalhada pelos
+   componentes para sair de sincronia depois. */
+
+/* ---- Alto contraste ----------------------------------------------------
+   Preto com amarelo é a combinação usada nos portais gov.br: 21:1 no texto
+   branco e 14.9:1 no amarelo, contra o mínimo de 4.5 da WCAG AA. A paleta
+   terrosa da marca some de propósito — quem liga isto precisa de contraste,
+   não da identidade visual. */
+:root[data-contraste="alto"] {
+  --cream: #000000;
+  --beige: #14140f;
+  --bone: #0d0d0d;
+  --brown: #ffd400;
+  --brown-dark: #ffffff;
+  --terracotta: #ffd400;
+  --terracotta-text: #ffd400;
+  --taupe: #ffffff;
+
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #0d0d0d;
+  --card-foreground: #ffffff;
+  --popover: #0d0d0d;
+  --popover-foreground: #ffffff;
+  --primary: #ffd400;
+  --primary-foreground: #000000;
+  --secondary: #14140f;
+  --secondary-foreground: #ffffff;
+  --muted: #14140f;
+  --muted-foreground: #ffffff;
+  --accent: #ffd400;
+  --accent-foreground: #000000;
+  /* Vermelho escuro some no preto; este da 9.25 sobre o fundo do alto
+     contraste. O erro nunca depende so da cor — vem com icone e texto —, mas
+     precisa ser legivel. */
+  --destructive: #ff8a8a;
+  --border: #ffffff;
+  --borda-forte: #ffffff;
+  --input: #ffffff;
+  --ring: #ffd400;
+}
+
+/* ⚠️ Os logos das plataformas são PNGs de marca, muitos com desenho escuro
+   e fundo transparente. Sobre o preto do alto contraste eles sumiriam. O
+   selo mantém fundo branco para a marca continuar reconhecível — é o mesmo
+   motivo pelo qual o favicon de um site não muda com o tema do navegador. */
+:root[data-contraste="alto"] [data-selo-plataforma] {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+/* ⚠️ Os bichinhos de fundo somem no alto contraste.
+
+   Eles existem para dar personalidade, e personalidade não é o que se pede a
+   este modo. Quem liga alto contraste está pedindo o oposto: menos ruído atrás
+   do texto. Um gato de traço amarelo cruzando um parágrafo — porque `--brown`
+   vira amarelo aqui — atrapalharia exatamente quem o modo veio atender. */
+:root[data-contraste="alto"] [data-animal-decorativo] {
+  display: none;
+}
+
+/* Fotos em alto contraste competem com o texto por atenção e não carregam
+   informação: elas ilustram. Baixar a intensidade mantém a hierarquia. */
+:root[data-contraste="alto"] [data-imagem-decorativa] {
+  filter: grayscale(1) contrast(1.15);
+  opacity: 0.75;
+}
+
+/* ---- Tamanho do texto --------------------------------------------------
+   Mexe no font-size da raiz, e não em cada componente: o Tailwind dimensiona
+   tudo em `rem`, então texto, espaçamentos e áreas de toque crescem juntos e
+   proporcionais. Aumentar só a fonte deixaria letra grande espremida na
+   caixa antiga. */
+:root[data-fonte="grande"] {
+  font-size: 112.5%;
+}
+:root[data-fonte="maior"] {
+  font-size: 125%;
+}
+
+/* ---- Movimento reduzido ------------------------------------------------
+   Vale para animação de CSS. As animações de JavaScript (Framer Motion) são
+   desligadas pelo <MotionConfig> do provider — as duas origens respondem ao
+   mesmo `data-movimento`. */
+:root[data-movimento="reduzido"] *,
+:root[data-movimento="reduzido"] *::before,
+:root[data-movimento="reduzido"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* O scroll suave é movimento como qualquer outro: para quem tem
+   sensibilidade vestibular, um salto de âncora deslizando a página inteira
+   é justamente o gatilho. */
+:root[data-movimento="reduzido"] {
+  scroll-behavior: auto !important;
 }
