@@ -1,5 +1,6 @@
 import { Coins, ClipboardList, HeartCrack, MessageCircleWarning } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import { AnimalDeFundo } from "@/components/decorative/animal-de-fundo";
 
 const problemas = [
   {
@@ -26,7 +27,8 @@ const problemas = [
 
 export function Problema() {
   return (
-    <section id="problema" className="bg-beige/60 py-20 sm:py-28">
+    <section id="problema" className="relative overflow-hidden bg-beige/60 py-20 sm:py-28">
+      <AnimalDeFundo animal="gato" className="-right-12 top-10 size-64 text-brown/[0.10] lg:size-80" />
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold text-brown-dark sm:text-4xl">
@@ -43,7 +45,7 @@ export function Problema() {
           {problemas.map((p, i) => (
             <Reveal key={p.titulo} delay={i * 0.08}>
               <div className="pulse-on-hover group flex h-full items-start gap-4 rounded-3xl bg-bone p-6 shadow-sm ring-1 ring-border transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-terracotta/15 text-terracotta transition-transform duration-300 group-hover:scale-110">
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-terracotta/15 text-terracotta-text transition-transform duration-300 group-hover:scale-110">
                   <p.icon className="size-6" />
                 </div>
                 <div>

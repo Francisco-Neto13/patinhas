@@ -2,6 +2,7 @@ import { Bone, Pill, PiggyBank } from "lucide-react";
 import { PlatformCard } from "@/components/platform-card";
 import { Reveal } from "@/components/reveal";
 import { siteConfig } from "@/lib/site-config";
+import { AnimalDeFundo } from "@/components/decorative/animal-de-fundo";
 
 const blocos = [
   {
@@ -31,7 +32,9 @@ const blocos = [
 
 export function ComoAjudar() {
   return (
-    <section id="ajudar" className="py-20 sm:py-28">
+    <section id="ajudar" className="relative overflow-hidden py-20 sm:py-28">
+      <AnimalDeFundo animal="passaro" className="-left-12 top-16 size-56 text-brown/[0.09] lg:size-72" />
+      <AnimalDeFundo animal="gato" className="-right-14 bottom-24 size-64 text-brown/[0.08] lg:size-80" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold text-brown-dark sm:text-4xl">
@@ -49,7 +52,7 @@ export function ComoAjudar() {
           {blocos.map((bloco) => (
             <div key={bloco.id}>
               <Reveal className="flex items-center gap-3">
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-terracotta/15 text-terracotta">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-terracotta/15 text-terracotta-text">
                   <bloco.icon className="size-5" />
                 </div>
                 <div>

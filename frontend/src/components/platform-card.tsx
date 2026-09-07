@@ -21,6 +21,19 @@ export function PlatformCard({ platform }: { platform: Platform }) {
       href={platform.url}
       target="_blank"
       rel="noopener noreferrer"
+      /*
+       * ⚠️ Sem este rotulo, o nome acessivel deste link tem 394 caracteres.
+       *
+       * O card inteiro e um <a>, entao o leitor de tela junta tudo que esta
+       * dentro dele — selo, nome, o paragrafo completo e "Visitar site" — e
+       * anuncia esse bloco como se fosse o NOME do link. Pior: comeca pelo
+       * selo, entao na lista de links do leitor os 17 cards aparecem como
+       * "+279 mil animais ajudados", nao como "Adotar.com.br".
+       *
+       * O `aria-label` substitui esse nome por algo que se ouve de uma vez. O
+       * conteudo do card continua todo legivel na leitura normal da pagina.
+       */
+      aria-label={`${platform.name} — abre o site em nova aba`}
       whileHover={{ y: -6 }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -30,9 +43,11 @@ export function PlatformCard({ platform }: { platform: Platform }) {
         {platform.heroImage ? (
           <Image
             src={platform.heroImage}
-            alt={`Imagem de divulgação do ${platform.name}`}
+            // Mesma razao do logo: ilustra o card, nao acrescenta informacao.
+            alt=""
             fill
             sizes="(min-width: 640px) 50vw, 100vw"
+            data-imagem-decorativa=""
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
@@ -44,18 +59,24 @@ export function PlatformCard({ platform }: { platform: Platform }) {
 
       <div className="flex flex-1 flex-col p-6 sm:p-7">
         <div className="flex items-center gap-3">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl border border-border bg-cream transition-transform duration-300 group-hover:scale-110">
+          <span
+            data-selo-plataforma=""
+            className="flex size-12 shrink-0 items-center justify-center rounded-2xl border border-border bg-cream transition-transform duration-300 group-hover:scale-110"
+          >
             {platform.logo ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={platform.logo}
-                alt={`Logo do ${platform.name}`}
+                // Decorativo: o nome ja vem no aria-label do link e no <h3>
+                // logo abaixo. Com texto aqui, o leitor anunciaria a marca
+                // tres vezes seguidas no mesmo card.
+                alt=""
                 className="size-8 object-contain"
                 loading="lazy"
                 referrerPolicy="no-referrer"
               />
             ) : (
-              <PawPrint className="size-6 text-terracotta" />
+              <PawPrint className="size-6 text-terracotta-text" />
             )}
           </span>
           <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">

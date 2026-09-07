@@ -22,7 +22,7 @@ export function SiteHeader() {
             <a
               key={item.href}
               href={item.href}
-              className="text-sm font-medium text-brown-dark/80 transition-colors hover:text-terracotta"
+              className="text-sm font-medium text-brown-dark/80 transition-colors hover:text-terracotta-text"
             >
               {item.label}
             </a>

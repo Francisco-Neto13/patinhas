@@ -1,5 +1,6 @@
 import { HeartPulse, Factory, Trees } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import { AnimalDeFundo } from "@/components/decorative/animal-de-fundo";
 
 const ods = [
   {
@@ -24,7 +25,8 @@ const ods = [
 
 export function Sobre() {
   return (
-    <section id="sobre" className="bg-beige/60 py-20 sm:py-28">
+    <section id="sobre" className="relative overflow-hidden bg-beige/60 py-20 sm:py-28">
+      <AnimalDeFundo animal="tartaruga" className="left-2 bottom-8 size-48 text-brown/[0.11] lg:size-56" />
       <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
         <Reveal>
           <h2 className="text-3xl font-semibold text-brown-dark sm:text-4xl">
@@ -47,7 +49,7 @@ export function Sobre() {
                   <span className="flex size-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
                     {o.numero}
                   </span>
-                  <o.icon className="size-5 text-terracotta" />
+                  <o.icon className="size-5 text-terracotta-text" />
                 </div>
                 <h3 className="mt-3 font-heading text-base font-semibold text-brown-dark">
                   {o.titulo}

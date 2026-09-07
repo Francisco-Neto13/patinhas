@@ -1,5 +1,6 @@
 import { Package, HandHeart, Sparkles } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import { AnimalDeFundo } from "@/components/decorative/animal-de-fundo";
 
 const pilares = [
   {
@@ -24,7 +25,8 @@ const pilares = [
 
 export function Solucao() {
   return (
-    <section id="solucao" className="py-20 sm:py-28">
+    <section id="solucao" className="relative overflow-hidden py-20 sm:py-28">
+      <AnimalDeFundo animal="cachorro" className="-left-14 bottom-8 size-64 text-brown/[0.09] lg:size-80" />
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold text-brown-dark sm:text-4xl">
