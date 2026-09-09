@@ -1,6 +1,7 @@
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Hero } from "@/components/sections/hero";
+import { VitrinePets } from "@/components/sections/vitrine-pets";
 import { Problema } from "@/components/sections/problema";
 import { Solucao } from "@/components/sections/solucao";
 import { Animais } from "@/components/sections/animais";
@@ -18,6 +19,10 @@ export default function Home() {
           para o menu — o pulo nao acontece de verdade. */}
       <main id="conteudo" tabIndex={-1} className="flex-1 outline-none">
         <Hero />
+        {/* Logo depois do hero, e longe da secao de adocao de proposito: uma
+            fita de fotos encostada em "Animais para adocao" seria lida como o
+            catalogo do abrigo, que e exatamente o que o CONTEXTO.MD proibe. */}
+        <VitrinePets />
         <Problema />
         <Solucao />
         <Animais />
