@@ -154,22 +154,38 @@ export function usePreferencias() {
   );
 }
 
+/**
+ * A pergunta "devo animar?" respondida num lugar só.
+ *
+ * ⚠️ NÃO use o `useReducedMotion` do Framer Motion para isto.
+ *
+ * Ele lê exclusivamente o `prefers-reduced-motion` do sistema operacional e
+ * ignora o `<MotionConfig>`. Verificado no navegador: com o botão da barra
+ * ligado, `data-movimento` virava "reduzido" e os componentes animados
+ * continuavam animando. Ou seja, o botão não fazia nada para a animação de
+ * JavaScript.
+ *
+ * Este hook lê a nossa store, que já combina as duas origens: o script sem
+ * flash grava `data-movimento` a partir do que foi salvo OU, na falta de
+ * escolha, do `prefers-reduced-motion` do sistema.
+ */
+export function useMovimentoReduzido() {
+  return usePreferencias().preferencias.movimento === "reduzido";
+}
+
 export function ProvedorAcessibilidade({ children }: { children: ReactNode }) {
   const { preferencias } = usePreferencias();
 
   return (
     /*
-      ⚠️ É esta linha que faz o botão "reduzir animações" valer para as
-      animações de JavaScript.
+      Cobre as animações que os componentes `motion` fazem por conta própria,
+      como o `whileHover` dos cards de plataforma, por exemplo.
 
-      O CSS de `data-movimento` só alcança `animation` e `transition`. O scroll
-      reveal das seções e o "levantar" dos cards são Framer Motion — JavaScript,
-      invisível para aquele CSS. Com `reducedMotion="always"` a própria
-      biblioteca passa a ignorá-las, e o `useReducedMotion` dentro do <Reveal>
-      responde a este mesmo ajuste.
-
-      Em "user" ela segue o `prefers-reduced-motion` do sistema, que é o
-      comportamento correto para quem nunca abriu a barra.
+      ⚠️ Mas NÃO cobre tudo, e essa foi a lição: o `useReducedMotion` da
+      biblioteca ignora este ajuste e lê só o `prefers-reduced-motion` do
+      sistema. Quem decide se um componente nosso anima é o
+      `useMovimentoReduzido` acima, não esta linha. Ela fica porque ainda
+      desliga o que é interno do Framer Motion.
     */
     <MotionConfig reducedMotion={preferencias.movimento === "reduzido" ? "always" : "user"}>
       {children}

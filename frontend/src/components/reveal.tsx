@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
+import { useMovimentoReduzido } from "@/components/acessibilidade/preferencias";
 import type { ReactNode } from "react";
 
 const variants: Variants = {
@@ -17,7 +18,7 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
-  const movimentoReduzido = useReducedMotion();
+  const movimentoReduzido = useMovimentoReduzido();
 
   /*
    * ⚠️ Quem pediu menos movimento não recebe uma animação mais curta: recebe
@@ -27,9 +28,9 @@ export function Reveal({
    * quem faz ele aparecer é a própria animação. Sem ela, o conteúdo sumiria.
    * Por isso aqui o wrapper de movimento sai inteiro do caminho.
    *
-   * `useReducedMotion` responde tanto ao `prefers-reduced-motion` do sistema
-   * quanto ao MotionConfig que a barra de acessibilidade controla, então este
-   * único ponto atende as duas origens.
+   * `useMovimentoReduzido` atende as duas origens de uma vez: a preferência do
+   * sistema e o botão da barra de acessibilidade. Ver o comentário do hook
+   * para por que o `useReducedMotion` do Framer Motion NÃO serve aqui.
    */
   if (movimentoReduzido) {
     return <div className={className}>{children}</div>;
