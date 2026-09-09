@@ -16,7 +16,7 @@ export default function Home() {
       {/* Alvo do "Pular para o conteudo" do layout. `tabIndex={-1}` deixa o
           <main> receber foco programaticamente: sem isso, alguns navegadores
           rolam ate a ancora mas mantem o foco no link, e o proximo Tab volta
-          para o menu — o pulo nao acontece de verdade. */}
+          para o menu, e o pulo nao acontece de verdade. */}
       <main id="conteudo" tabIndex={-1} className="flex-1 outline-none">
         <Hero />
         {/* Logo depois do hero, e longe da secao de adocao de proposito: uma

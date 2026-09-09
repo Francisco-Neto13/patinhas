@@ -21,7 +21,7 @@ export function BarraAcessibilidade() {
    * Esc fecha e DEVOLVE O FOCO ao botão.
    *
    * A segunda metade é a que costuma faltar: sem ela o foco fica órfão no
-   * painel que acabou de sumir, e o próximo Tab recomeça do topo da página —
+   * painel que acabou de sumir, e o próximo Tab recomeça do topo da página, e
    * quem navega por teclado perde o lugar onde estava.
    */
   useEffect(() => {
@@ -54,7 +54,7 @@ export function BarraAcessibilidade() {
      *
      * O VLibras se fixa à direita, no meio da altura da tela, com z-index
      * 2147483639 (quase o máximo possível). Disputar aquele espaço deixaria um
-     * widget de acessibilidade cobrindo o outro — os dois públicos que mais
+     * widget de acessibilidade cobrindo o outro: os dois públicos que mais
      * precisam da página, atrapalhados justamente pelo que veio ajudá-los.
      */
     <div className="fixed bottom-4 left-4 z-[90] print:hidden">
@@ -115,7 +115,7 @@ export function BarraAcessibilidade() {
             {/*
               <fieldset>/<legend> com radios de verdade, e não três botões.
               O agrupamento é anunciado ("Tamanho do texto, 1 de 3") e as setas
-              do teclado navegam entre as opções sem nenhuma linha de JS — é
+              do teclado navegam entre as opções sem nenhuma linha de JS. É
               comportamento nativo do navegador.
             */}
             <legend className="flex items-center gap-2 text-sm font-medium text-brown-dark">
@@ -203,7 +203,7 @@ export function BarraAcessibilidade() {
         <Accessibility className="size-5" aria-hidden="true" />
         {/*
           O rótulo some no celular por espaço, mas o `sr-only` mantém o nome
-          acessível do botão intacto — ícone sozinho não tem nome nenhum para
+          acessível do botão intacto, porque ícone sozinho não tem nome nenhum para
           um leitor de tela.
         */}
         <span className="sr-only sm:not-sr-only">Acessibilidade</span>

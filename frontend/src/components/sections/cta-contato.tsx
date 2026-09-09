@@ -19,7 +19,7 @@ import {
 
 const VAZIO: CamposContato = { nome: "", email: "", telefone: "", mensagem: "" };
 
-/** id do campo no DOM — usado pelo <label>, pelo aria-describedby e pelo foco. */
+/** id do campo no DOM, usado pelo <label>, pelo aria-describedby e pelo foco. */
 const idDoCampo = (campo: keyof CamposContato) => `contato-${campo}`;
 
 function MensagemDeErro({ id, texto }: { id: string; texto: string }) {
@@ -42,7 +42,7 @@ export function CtaContato() {
    * Só valida depois da primeira tentativa de envio.
    *
    * Marcar o campo de e-mail como inválido enquanto a pessoa ainda está
-   * digitando a primeira letra é hostil — ela ainda não errou, só não terminou.
+   * digitando a primeira letra é hostil: ela ainda não errou, só não terminou.
    * Depois do primeiro envio, aí sim revalida a cada tecla, para o erro sumir
    * assim que for corrigido.
    */
@@ -52,7 +52,7 @@ export function CtaContato() {
     /*
      * ⚠️ O corte acontece aqui TAMBEM, e nao so no `maxLength` do campo.
      *
-     * O atributo limita digitacao e colagem — que e o caminho normal —, mas nao
+     * O atributo limita digitacao e colagem (que e o caminho normal), mas nao
      * vale para valor atribuido por codigo: preenchimento automatico do
      * navegador, extensao, ou um `.value = ...` qualquer entram inteiros. Como
      * quem monta o corpo do e-mail e este estado, e nao o DOM, o limite tem de
@@ -79,7 +79,7 @@ export function CtaContato() {
        * ⚠️ Mandar o foco para o primeiro campo inválido.
        *
        * Sem isto, quem envia pelo teclado fica com o foco no botão, os erros
-       * aparecem acima — fora da vista de quem usa ampliador de tela — e a
+       * aparecem acima, fora da vista de quem usa ampliador de tela, e a
        * única saída é sair navegando por Shift+Tab para achar qual campo
        * reclamou. É o WCAG 3.3.1 na prática.
        */
@@ -97,11 +97,11 @@ export function CtaContato() {
     ].join("\n");
 
     window.location.href = `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent(
-      `Contato pelo site — ${campos.nome}`,
+      `Contato pelo site: ${campos.nome}`,
     )}&body=${encodeURIComponent(corpo)}`;
   }
 
-  /** Atributos que ligam campo, erro e ajuda — repetidos em todos os campos. */
+  /** Atributos que ligam campo, erro e ajuda, repetidos em todos os campos. */
   const acessibilidadeDo = (campo: keyof CamposContato, ajudaId?: string) => {
     const erroId = `${idDoCampo(campo)}-erro`;
     const descricoes = [erros[campo] ? erroId : null, ajudaId].filter(Boolean).join(" ");
@@ -124,7 +124,7 @@ export function CtaContato() {
             Vamos juntos por mais focinhos felizes?
           </h2>
           <p className="mt-4 text-taupe">
-            Manda uma mensagem pra gente — abre seu e-mail já preenchido com o
+            Manda uma mensagem pra gente. Abrimos seu e-mail já preenchido com o
             que você escrever aqui.
           </p>
         </Reveal>
@@ -137,8 +137,8 @@ export function CtaContato() {
              * Elas aparecem no idioma do navegador (não no do site), somem
              * sozinhas depois de alguns segundos, só mostram um erro por vez e
              * não são lidas de forma confiável por todo leitor de tela. Os
-             * atributos nativos continuam nos campos — eles é que dão o teclado
-             * certo no celular e o preenchimento automático —, mas quem escreve
+             * atributos nativos continuam nos campos, e são eles que dão o teclado
+             * certo no celular e o preenchimento automático, mas quem escreve
              * a mensagem é o `validarContato`.
              */
             noValidate
@@ -260,7 +260,7 @@ export function CtaContato() {
 
             <p className="text-xs text-taupe">
               Ao enviar, abrimos seu programa de e-mail com a mensagem já
-              escrita — nada é enviado por este site.
+              escrita. Nada é enviado por este site.
             </p>
 
             <Button type="submit" size="lg" className="w-full rounded-full sm:w-auto">

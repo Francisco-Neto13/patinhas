@@ -25,7 +25,7 @@ export function PlatformCard({ platform }: { platform: Platform }) {
        * ⚠️ Sem este rotulo, o nome acessivel deste link tem 394 caracteres.
        *
        * O card inteiro e um <a>, entao o leitor de tela junta tudo que esta
-       * dentro dele — selo, nome, o paragrafo completo e "Visitar site" — e
+       * dentro dele (selo, nome, o paragrafo completo e "Visitar site") e
        * anuncia esse bloco como se fosse o NOME do link. Pior: comeca pelo
        * selo, entao na lista de links do leitor os 17 cards aparecem como
        * "+279 mil animais ajudados", nao como "Adotar.com.br".
@@ -33,7 +33,7 @@ export function PlatformCard({ platform }: { platform: Platform }) {
        * O `aria-label` substitui esse nome por algo que se ouve de uma vez. O
        * conteudo do card continua todo legivel na leitura normal da pagina.
        */
-      aria-label={`${platform.name} — abre o site em nova aba`}
+      aria-label={`${platform.name}, abre o site em nova aba`}
       whileHover={{ y: -6 }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}

@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/site-config";
 import { AnimalDeFundo } from "@/components/decorative/animal-de-fundo";
 
 // Sem abrigo parceiro confirmado hoje, então esta seção não mostra nenhum
-// animal (real ou de exemplo) — só redireciona para redes de adoção
+// animal (real ou de exemplo). Só redireciona para redes de adoção
 // brasileiras reais. Ver documentation/contexto/CONTEXTO.MD, seção
 // "Catálogo de adoção".
 export function Animais() {
@@ -24,7 +24,7 @@ export function Animais() {
             O Patinhas ainda não tem um abrigo parceiro confirmado, então não
             mostramos nenhum animal aqui pra não arriscar exibir um bichinho
             que não existe de verdade. Enquanto isso, conheça de perto as
-            maiores redes de adoção reais do Brasil — cada uma delas já
+            maiores redes de adoção reais do Brasil. Cada uma delas já
             transformou milhares de histórias.
           </p>
         </Reveal>

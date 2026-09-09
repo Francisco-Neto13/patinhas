@@ -36,7 +36,7 @@ export function Problema() {
           </h2>
           <p className="mt-4 text-taupe">
             A falta recorrente de recursos básicos para os animais está associada
-            à ausência de uma organização adequada nos abrigos — e isso afeta
+            à ausência de uma organização adequada nos abrigos, e isso afeta
             todo mundo envolvido no cuidado.
           </p>
         </Reveal>

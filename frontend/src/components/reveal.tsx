@@ -24,7 +24,7 @@ export function Reveal({
    * ⚠️ Quem pediu menos movimento não recebe uma animação mais curta: recebe
    * uma <div> comum.
    *
-   * Só apagar a transição não bastaria — o elemento nasce em `opacity: 0` e
+   * Só apagar a transição não bastaria, porque o elemento nasce em `opacity: 0` e
    * quem faz ele aparecer é a própria animação. Sem ela, o conteúdo sumiria.
    * Por isso aqui o wrapper de movimento sai inteiro do caminho.
    *
@@ -40,7 +40,7 @@ export function Reveal({
     <motion.div
       // ⚠️ Marca para o <noscript> do layout.
       //
-      // O HTML servido traz 39 elementos com `opacity:0` — é assim que o
+      // O HTML servido traz 39 elementos com `opacity:0`. É assim que o
       // Framer Motion prepara o estado inicial. Quem faz eles aparecerem é o
       // JavaScript. Se ele não rodar (falha de rede, bloqueio, navegador
       // antigo), a página fica praticamente em branco: o conteúdo está no

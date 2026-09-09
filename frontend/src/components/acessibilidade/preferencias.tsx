@@ -27,7 +27,7 @@ const PADRAO: Preferencias = {
  *
  * Se a preferência só fosse aplicada depois que o React hidrata, quem escolheu
  * alto contraste veria a página acender em creme e só então virar preta, a cada
- * navegação. É o mesmo flash que assombra seletor de tema — e para quem ligou
+ * navegação. É o mesmo flash que assombra seletor de tema, e para quem ligou
  * alto contraste por sensibilidade à luz, o flash não é um detalhe estético.
  *
  * Ele é deliberadamente pequeno e à prova de falha: qualquer erro (localStorage
@@ -53,8 +53,8 @@ export const SCRIPT_SEM_FLASH = `
 
    Quem escreve primeiro é o SCRIPT_SEM_FLASH, antes de qualquer JavaScript de
    aplicação existir. Se o React guardasse a preferência em `useState`, haveria
-   duas verdades — a que está pintada na tela e a que o componente acha que
-   está — e elas divergiriam já no primeiro render.
+   duas verdades (a que está pintada na tela e a que o componente acha que
+   está) e elas divergiriam já no primeiro render.
 
    Por isso o padrão aqui é uma store externa lida com `useSyncExternalStore`:
    ele foi feito exatamente para estado que mora fora do React e precisa
@@ -81,7 +81,7 @@ let instantaneo: Preferencias = PADRAO;
 
 // No cliente o cache já nasce com o que o script inline pintou na tela. Durante
 // a hidratação o React ainda usa `getServerSnapshot` (o padrão), e logo em
-// seguida troca para este valor — que é justamente o descompasso que o
+// seguida troca para este valor, que é justamente o descompasso que o
 // `useSyncExternalStore` sabe resolver sozinho, sem aviso no console.
 if (typeof document !== "undefined") {
   instantaneo = lerDoDocumento();

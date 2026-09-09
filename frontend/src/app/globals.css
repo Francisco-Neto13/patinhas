@@ -57,14 +57,14 @@
 }
 
 :root {
-  /* Paleta Patinhas — ver documentation/planejamento/FRONTEND.MD */
+  /* Paleta Patinhas. Ver documentation/planejamento/FRONTEND.MD */
   --cream: #fbf3e9;
   --beige: #efe1d1;
   --bone: #fffdf9;
   --brown: #8b5e3c;
   --brown-dark: #3d2b1f;
   --terracotta: #d97a4d;
-  /* ⚠️ O terracotta da marca (#d97a4d) tem contraste 2.79 sobre o creme —
+  /* ⚠️ O terracotta da marca (#d97a4d) tem contraste 2.79 sobre o creme e
      reprova nos dois limites da WCAG AA (4.5 para texto, 3.0 para icone).
      Ele continua valendo para preenchimento grande, onde nao ha limite:
      blobs do hero, gradiente do card, fundo de hover.
@@ -88,7 +88,7 @@
   --muted-foreground: var(--taupe);
   --accent: var(--terracotta);
   --accent-foreground: var(--bone);
-  /* O vermelho que vem do shadcn (#e7000b) da 4.34 sobre o creme — reprova
+  /* O vermelho que vem do shadcn (#e7000b) da 4.34 sobre o creme e reprova
      por pouco no minimo de 4.5 da WCAG AA, justamente na cor que anuncia erro
      de formulario. Este passa com folga: 6.43 no bone, 5.94 no creme. */
   --destructive: #b3261e;
@@ -96,14 +96,14 @@
   /* ⚠️ Duas bordas, porque elas tem trabalhos diferentes.
 
      A WCAG 1.4.11 exige 3:1 do contorno que e' NECESSARIO para identificar um
-     componente — nao de toda linha da tela. A borda de card e' decorativa (o
+     componente, nao de toda linha da tela. A borda de card e' decorativa (o
      card ja' se distingue pelo fundo e pela sombra) e fica isenta: `--border`
      continua clarinha, e a identidade visual nao muda.
 
      Ja' a borda de um campo de formulario e' a unica coisa que diz onde
      comeca o campo, e a de um botao outline e' o que o separa de um link
      solto. Essas usam `--borda-forte`: e' o mesmo matiz da marca clareado ate'
-     o limite — 4.17 no bone, 3.85 no creme, 3.30 no bege. Um tom mais claro
+     o limite: 4.17 no bone, 3.85 no creme, 3.30 no bege. Um tom mais claro
      ja' reprovaria. */
   --borda-forte: #9c7256;
   --input: var(--borda-forte);
@@ -139,7 +139,7 @@
      nativo do navegador.
 
      O efeito colateral e que TODO botao do site parava de sinalizar que e
-     clicavel — o de acessibilidade, o de enviar mensagem, os toggles, o menu
+     clicavel: o de acessibilidade, o de enviar mensagem, os toggles, o menu
      do celular. Os <a> nao sofreram, porque neles o pointer vem do navegador,
      e e por isso que so alguns cliques pareciam "mortos".
 
@@ -194,14 +194,14 @@
    primeira pintura pelo script inline do layout.
 
    ⚠️ Elas mudam TOKENS, não componentes. Como toda a interface já lê as
-   cores de variáveis CSS, o alto contraste é este bloco e mais nada — não
+   cores de variáveis CSS, o alto contraste é este bloco e mais nada. Não
    há uma segunda folha de estilo nem classe condicional espalhada pelos
    componentes para sair de sincronia depois. */
 
 /* ---- Alto contraste ----------------------------------------------------
    Preto com amarelo é a combinação usada nos portais gov.br: 21:1 no texto
    branco e 14.9:1 no amarelo, contra o mínimo de 4.5 da WCAG AA. A paleta
-   terrosa da marca some de propósito — quem liga isto precisa de contraste,
+   terrosa da marca some de propósito, porque quem liga isto precisa de contraste,
    não da identidade visual. */
 :root[data-contraste="alto"] {
   --cream: #000000;
@@ -228,7 +228,7 @@
   --accent: #ffd400;
   --accent-foreground: #000000;
   /* Vermelho escuro some no preto; este da 9.25 sobre o fundo do alto
-     contraste. O erro nunca depende so da cor — vem com icone e texto —, mas
+     contraste. O erro nunca depende so da cor (vem com icone e texto), mas
      precisa ser legivel. */
   --destructive: #ff8a8a;
   --border: #ffffff;
@@ -239,7 +239,7 @@
 
 /* ⚠️ Os logos das plataformas são PNGs de marca, muitos com desenho escuro
    e fundo transparente. Sobre o preto do alto contraste eles sumiriam. O
-   selo mantém fundo branco para a marca continuar reconhecível — é o mesmo
+   selo mantém fundo branco para a marca continuar reconhecível. É o mesmo
    motivo pelo qual o favicon de um site não muda com o tema do navegador. */
 :root[data-contraste="alto"] [data-selo-plataforma] {
   background: #ffffff;
@@ -250,8 +250,8 @@
 
    Eles existem para dar personalidade, e personalidade não é o que se pede a
    este modo. Quem liga alto contraste está pedindo o oposto: menos ruído atrás
-   do texto. Um gato de traço amarelo cruzando um parágrafo — porque `--brown`
-   vira amarelo aqui — atrapalharia exatamente quem o modo veio atender. */
+   do texto. Um gato de traço amarelo cruzando um parágrafo, porque `--brown`
+   vira amarelo aqui, atrapalharia exatamente quem o modo veio atender. */
 :root[data-contraste="alto"] [data-animal-decorativo] {
   display: none;
 }
@@ -277,7 +277,7 @@
 
 /* ---- Movimento reduzido ------------------------------------------------
    Vale para animação de CSS. As animações de JavaScript (Framer Motion) são
-   desligadas pelo <MotionConfig> do provider — as duas origens respondem ao
+   desligadas pelo <MotionConfig> do provider, e as duas origens respondem ao
    mesmo `data-movimento`. */
 :root[data-movimento="reduzido"] *,
 :root[data-movimento="reduzido"] *::before,

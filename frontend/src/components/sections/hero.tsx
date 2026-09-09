@@ -45,7 +45,7 @@ export function Hero() {
                 variant: "outline",
                 // A borda vem do proprio variant `outline` (ver ui/button.tsx):
                 // `border-brown/30` que estava aqui dava contraste 1.50 contra o
-                // creme — a borda mal existia, e o botao lia como texto solto ao
+                // creme, a borda mal existia, e o botao lia como texto solto ao
                 // lado do primario.
                 className: "rounded-full text-brown-dark hover:bg-beige",
               })}

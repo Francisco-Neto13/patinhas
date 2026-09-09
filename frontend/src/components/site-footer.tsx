@@ -15,7 +15,7 @@ export function SiteFooter() {
           animal. Nenhum valor financeiro é processado por esta plataforma.
         </p>
         <p className="flex items-center gap-2 text-xs text-bone/60">
-          <MapPin className="size-3.5" /> Abrigos e ONGs parceiras — consulte o
+          <MapPin className="size-3.5" /> Abrigos e ONGs parceiras. Consulte o
           contato de cada uma na área de doações
         </p>
         <p className="text-xs text-bone/50">

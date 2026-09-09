@@ -49,11 +49,11 @@ const variantesDoBotao = cva(
  * O cva so' CONCATENA base + variante + className; quem resolve conflito e' o
  * tailwind-merge, dentro do `cn()`. O componente <Button> abaixo ja' fazia
  * isso, mas os links da pagina chamam `buttonVariants({...})` direto no
- * `className` de um <a> — e ali nao passava por merge nenhum.
+ * `className` de um <a>, e ali nao passava por merge nenhum.
  *
  * O sintoma era silencioso: a base traz `border-transparent` e a variante
  * `outline` traz `border-borda-forte`. Sem merge, as duas classes iam juntas
- * para o HTML e quem decidia era a ordem no arquivo de CSS — que deu
+ * para o HTML e quem decidia era a ordem no arquivo de CSS, que deu
  * transparente. Resultado: todo botao outline da pagina ficou SEM borda
  * visivel, que e' justamente o contorno exigido pela WCAG 1.4.11.
  *

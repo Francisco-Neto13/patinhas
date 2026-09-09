@@ -3,7 +3,7 @@
  *
  * Ficam fora do componente porque são lógica pura: dá para ler, testar e
  * ajustar os limites sem abrir JSX. As mensagens vivem junto das regras de
- * propósito — mensagem de erro é parte da regra, não decoração dela.
+ * propósito, porque mensagem de erro é parte da regra, não decoração dela.
  */
 
 /** Limites de tamanho. Também aplicados como `maxLength` nos campos. */
@@ -64,7 +64,7 @@ function validarEmail(v: string): string | undefined {
   /*
    * ⚠️ Mais rígido que o `type="email"` do navegador de propósito.
    *
-   * A validação nativa aceita "ana@servidor" — sem ponto e sem domínio — porque
+   * A validação nativa aceita "ana@servidor", sem ponto e sem domínio, porque
    * o padrão do HTML permite endereços de rede interna. Num formulário público
    * isso é quase sempre erro de digitação, e o e-mail volta como não entregue
    * depois, quando não dá mais para perguntar.
@@ -96,7 +96,7 @@ function validarMensagem(v: string): string | undefined {
   const t = v.trim();
   if (!t) return "Escreva sua mensagem.";
   if (t.length < MIN_MENSAGEM) {
-    return `A mensagem está muito curta — escreva pelo menos ${MIN_MENSAGEM} caracteres.`;
+    return `A mensagem está muito curta. Escreva pelo menos ${MIN_MENSAGEM} caracteres.`;
   }
   return undefined;
 }
@@ -115,7 +115,7 @@ export function validarContato(campos: CamposContato): ErrosContato {
   return erros;
 }
 
-/** Ordem visual dos campos — usada para focar o PRIMEIRO inválido. */
+/** Ordem visual dos campos, usada para focar o PRIMEIRO inválido. */
 export const ORDEM_CAMPOS: (keyof CamposContato)[] = [
   "nome",
   "email",

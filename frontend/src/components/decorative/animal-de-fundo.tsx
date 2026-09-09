@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
  * domínio público de verdade, sem pegadinha de licença). O problema não é
  * jurídico, é visual: cada silhueta de lá vem de um autor diferente, com peso
  * de traço, nível de detalhe e estilo próprios. Seis seções com seis estilos
- * distintos leem como figurinha colada, não como identidade — o oposto do
+ * distintos leem como figurinha colada, não como identidade, o oposto do
  * acabamento que se quer aqui.
  *
  * O Lucide já é a linguagem visual do site (são 39 ícones dele nas seções) e é

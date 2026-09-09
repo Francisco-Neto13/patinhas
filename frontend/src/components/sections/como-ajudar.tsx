@@ -25,7 +25,7 @@ const blocos = [
     icon: PiggyBank,
     titulo: "Doação financeira",
     intro:
-      "O Patinhas não processa pagamentos — essas são plataformas de vaquinha online usadas por ONGs e protetores de verdade.",
+      "O Patinhas não processa pagamentos. Essas são plataformas de vaquinha online usadas por ONGs e protetores de verdade.",
     plataformas: siteConfig.financeiraPlatforms,
   },
 ];
@@ -43,7 +43,7 @@ export function ComoAjudar() {
           <p className="mt-4 text-taupe">
             O Patinhas ainda não tem abrigo parceiro nem processa doações
             diretamente. Por enquanto, reunimos aqui iniciativas reais e
-            verificadas pra você ajudar de verdade agora — cada card leva
+            verificadas pra você ajudar de verdade agora. Cada card leva
             direto pro site de origem.
           </p>
         </Reveal>

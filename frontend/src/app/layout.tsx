@@ -36,8 +36,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           ⚠️ Primeiro elemento do <body>, e tem de continuar sendo.
 
           Ele aplica a preferencia de contraste/fonte salva ANTES do navegador
-          pintar qualquer coisa. Empurrado para baixo — ou trocado por um
-          useEffect — a pagina acende em creme e so depois vira preta, a cada
+          pintar qualquer coisa. Empurrado para baixo, ou trocado por um
+          useEffect, a pagina acende em creme e so depois vira preta, a cada
           navegacao. Para quem ligou alto contraste por sensibilidade a luz,
           esse flash e o problema, nao um detalhe.
         */}
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
           Fica fora da tela ate receber foco pelo teclado, e ai aparece. Sem
           ele, quem navega por Tab passa pelo logo, pelos 6 links do menu e
-          pelo CTA em TODA visita — e, para chegar ao formulario de contato,
+          pelo CTA em TODA visita. E, para chegar ao formulario de contato,
           ainda atravessa os 17 links dos cards de plataforma.
 
           `accessKey="1"` e o atalho que o eMAG padroniza para "ir ao
