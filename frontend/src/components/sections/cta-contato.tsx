@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { AlertCircle, Mail, MessageCircle, Send } from "lucide-react";
+import { useState, useTransition } from "react";
+import { AlertCircle, CheckCircle2, ChevronDown, Loader2, Mail, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Reveal } from "@/components/reveal";
-import { siteConfig } from "@/lib/site-config";
 import { AnimalDeFundo } from "@/components/decorative/animal-de-fundo";
+import { enviarMensagem } from "@/lib/publico/enviar-mensagem";
 import {
   formatarTelefone,
   LIMITES,
@@ -35,7 +35,20 @@ function MensagemDeErro({ id, texto }: { id: string; texto: string }) {
   );
 }
 
-export function CtaContato() {
+/** Textos e canais vêm do painel; as perguntas, do módulo de FAQ. */
+export function CtaContato({
+  titulo,
+  intro,
+  email,
+  whatsapp,
+  perguntas,
+}: {
+  titulo: string;
+  intro: string;
+  email: string;
+  whatsapp: string;
+  perguntas: { id: string; pergunta: string; resposta: string }[];
+}) {
   const [campos, setCampos] = useState<CamposContato>(VAZIO);
   const [erros, setErros] = useState<ErrosContato>({});
   /*
@@ -47,6 +60,9 @@ export function CtaContato() {
    * assim que for corrigido.
    */
   const [jaTentou, setJaTentou] = useState(false);
+  const [enviando, iniciarEnvio] = useTransition();
+  const [enviado, setEnviado] = useState(false);
+  const [erroGeral, setErroGeral] = useState<string | null>(null);
 
   function alterar(campo: keyof CamposContato, valor: string) {
     /*
@@ -55,7 +71,7 @@ export function CtaContato() {
      * O atributo limita digitacao e colagem (que e o caminho normal), mas nao
      * vale para valor atribuido por codigo: preenchimento automatico do
      * navegador, extensao, ou um `.value = ...` qualquer entram inteiros. Como
-     * quem monta o corpo do e-mail e este estado, e nao o DOM, o limite tem de
+     * quem vai para o servidor e este estado, e nao o DOM, o limite tem de
      * valer aqui para ser um limite de verdade.
      *
      * O telefone nao precisa: o `formatarTelefone` ja para nos 11 digitos.
@@ -88,17 +104,26 @@ export function CtaContato() {
       return;
     }
 
-    const corpo = [
-      campos.mensagem,
-      "",
-      `Nome: ${campos.nome}`,
-      `E-mail: ${campos.email}`,
-      `Telefone: ${campos.telefone}`,
-    ].join("\n");
-
-    window.location.href = `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent(
-      `Contato pelo site: ${campos.nome}`,
-    )}&body=${encodeURIComponent(corpo)}`;
+    /*
+     * A mensagem vai para o painel administrativo (seção 9 do
+     * ADMINISTRACAO.MD), e não mais para o programa de e-mail de quem visita.
+     * Com o `mailto:` antigo, quem não tinha e-mail configurado no computador
+     * (a maioria, no celular) clicava em enviar e nada acontecia.
+     */
+    const armadilha =
+      (e.currentTarget.elements.namedItem("site_web") as HTMLInputElement | null)?.value ?? "";
+    setErroGeral(null);
+    iniciarEnvio(async () => {
+      const resultado = await enviarMensagem({ ...campos, armadilha });
+      if (resultado.ok) {
+        setEnviado(true);
+        setCampos(VAZIO);
+        setJaTentou(false);
+        return;
+      }
+      setErros(resultado.erros ?? {});
+      setErroGeral(resultado.erro);
+    });
   }
 
   /** Atributos que ligam campo, erro e ajuda, repetidos em todos os campos. */
@@ -116,20 +141,54 @@ export function CtaContato() {
   const restantes = LIMITES.mensagem - campos.mensagem.length;
 
   return (
-    <section id="contato" className="relative overflow-hidden py-20 sm:py-28">
+    <section id="contato" className="relative scroll-mt-16 overflow-hidden bg-beige/60 py-20 sm:py-28">
       <AnimalDeFundo animal="peixe" className="-right-12 bottom-12 size-56 -scale-x-100 text-brown/[0.09] lg:size-72" />
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <Reveal className="text-center">
           <h2 className="text-3xl font-semibold text-brown-dark sm:text-4xl">
-            Vamos juntos por mais focinhos felizes?
+            {titulo}
           </h2>
           <p className="mt-4 text-taupe">
-            Manda uma mensagem pra gente. Abrimos seu e-mail já preenchido com o
-            que você escrever aqui.
+            {intro}
           </p>
         </Reveal>
 
+        {perguntas.length > 0 && (
+          <Reveal className="mt-10">
+            <h3 className="font-heading text-xl font-semibold text-brown-dark">Perguntas frequentes</h3>
+            {/*
+              <details>/<summary> nativos: abrem com clique, Enter e Espaço, e o
+              leitor de tela anuncia "expandido/recolhido" sem nenhum ARIA nosso.
+              Com JavaScript desligado continuam funcionando.
+            */}
+            <div className="mt-4 divide-y divide-border rounded-3xl border border-border bg-bone shadow-sm">
+              {perguntas.map((p) => (
+                <details key={p.id} className="group px-5 py-4 sm:px-6">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-brown-dark focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
+                    {p.pergunta}
+                    <ChevronDown className="size-4 shrink-0 text-taupe transition-transform group-open:rotate-180" aria-hidden="true" />
+                  </summary>
+                  <p className="mt-3 text-sm leading-relaxed whitespace-pre-wrap text-taupe">{p.resposta}</p>
+                </details>
+              ))}
+            </div>
+            <p className="mt-6 text-center text-sm text-taupe">Não achou sua dúvida? Escreva pra gente.</p>
+          </Reveal>
+        )}
+
         <Reveal delay={0.1}>
+          {enviado ? (
+            // `role="status"` anuncia a confirmação para quem usa leitor de tela,
+            // já que o formulário inteiro some da frente.
+            <div role="status" className="mt-10 rounded-3xl border border-border bg-bone p-8 text-center shadow-sm">
+              <CheckCircle2 className="mx-auto size-10 text-terracotta-text" aria-hidden="true" />
+              <p className="mt-4 font-heading text-xl font-semibold text-brown-dark">Mensagem enviada!</p>
+              <p className="mt-2 text-taupe">Obrigado por escrever. A gente responde assim que possível.</p>
+              <Button type="button" variant="outline" size="lg" className="mt-6 rounded-full" onClick={() => setEnviado(false)}>
+                Enviar outra mensagem
+              </Button>
+            </div>
+          ) : (
           <form
             /*
              * ⚠️ `noValidate` desliga as bolhas do navegador de propósito.
@@ -143,8 +202,18 @@ export function CtaContato() {
              */
             noValidate
             onSubmit={enviar}
-            className="mt-10 space-y-5 rounded-3xl border border-border bg-bone p-6 shadow-sm sm:p-8"
+            className="relative mt-10 space-y-5 rounded-3xl border border-border bg-bone p-6 shadow-sm sm:p-8"
           >
+            {/*
+              Campo-armadilha para robôs. Fora da tela, fora do Tab e escondido
+              do leitor de tela: nenhuma pessoa preenche. Robô preenche tudo que
+              acha, e o servidor descarta a mensagem em silêncio.
+            */}
+            <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+              <label htmlFor="site_web">Não preencha este campo</label>
+              <input id="site_web" name="site_web" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
+            </div>
+
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <label
@@ -258,27 +327,42 @@ export function CtaContato() {
               )}
             </div>
 
+            {erroGeral && (
+              <p role="alert" className="flex items-start gap-1.5 text-sm text-destructive">
+                <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                {erroGeral}
+              </p>
+            )}
+
             <p className="text-xs text-taupe">
-              Ao enviar, abrimos seu programa de e-mail com a mensagem já
-              escrita. Nada é enviado por este site.
+              Seus dados são usados só para responder a esta mensagem.
             </p>
 
-            <Button type="submit" size="lg" className="w-full rounded-full sm:w-auto">
-              Enviar mensagem <Send className="size-4" />
+            <Button type="submit" size="lg" disabled={enviando} className="w-full rounded-full sm:w-auto">
+              {enviando ? (
+                <>
+                  Enviando <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                </>
+              ) : (
+                <>
+                  Enviar mensagem <Send className="size-4" />
+                </>
+              )}
             </Button>
           </form>
+          )}
         </Reveal>
 
         <Reveal delay={0.15}>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 text-sm text-taupe sm:flex-row">
             <a
-              href={`mailto:${siteConfig.contact.email}`}
+              href={`mailto:${email}`}
               className="inline-flex items-center gap-2 hover:text-terracotta-text"
             >
-              <Mail className="size-4" /> {siteConfig.contact.email}
+              <Mail className="size-4" /> {email}
             </a>
             <a
-              href={siteConfig.contact.whatsapp}
+              href={whatsapp}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 hover:text-terracotta-text"
