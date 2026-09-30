@@ -333,3 +333,34 @@
 :root[data-movimento="reduzido"] {
   scroll-behavior: auto !important;
 }
+
+/* ---- Perguntas frequentes ----------------------------------------------
+   A resposta desliza ao abrir, em vez de aparecer de supetão. É CSS puro
+   sobre o <details> nativo: `::details-content` e `interpolate-size` deixam
+   animar até `height: auto`. Navegador que não conhece os dois só abre sem
+   animação, que era o comportamento de antes.
+
+   ⚠️ `::details-content` é um pseudo-elemento próprio: a regra geral de
+   movimento reduzido acima (`*`, `::before`, `::after`) não o alcança, por
+   isso as duas preferências são repetidas aqui. */
+.faq-item {
+  interpolate-size: allow-keywords;
+}
+.faq-item::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size 0.3s ease,
+    content-visibility 0.3s ease allow-discrete;
+}
+.faq-item[open]::details-content {
+  block-size: auto;
+}
+:root[data-movimento="reduzido"] .faq-item::details-content {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .faq-item::details-content {
+    transition: none;
+  }
+}

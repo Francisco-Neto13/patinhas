@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { AlertCircle, CheckCircle2, ChevronDown, Loader2, Mail, MessageCircle, Send } from "lucide-react";
+import { AlertCircle, CheckCircle2, Loader2, Mail, MessageCircle, Minus, Plus, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -160,15 +160,29 @@ export function CtaContato({
               <details>/<summary> nativos: abrem com clique, Enter e Espaço, e o
               leitor de tela anuncia "expandido/recolhido" sem nenhum ARIA nosso.
               Com JavaScript desligado continuam funcionando.
+
+              Padrão de FAQ: cada pergunta é um cartão, a linha INTEIRA é o
+              alvo do clique, "+" vira "−" ao abrir, e várias podem ficar
+              abertas (quem lê FAQ compara respostas). A abertura animada
+              está em globals.css (`.faq-item`).
             */}
-            <div className="mt-4 divide-y divide-border rounded-3xl border border-border bg-bone shadow-sm">
+            <div className="mt-4 space-y-3">
               {perguntas.map((p) => (
-                <details key={p.id} className="group px-5 py-4 sm:px-6">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-brown-dark focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
+                <details
+                  key={p.id}
+                  className="faq-item group rounded-2xl border border-border bg-bone shadow-sm transition-[border-color,box-shadow] open:border-terracotta/40 open:shadow-md"
+                >
+                  <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 rounded-2xl px-5 py-4 font-medium text-brown-dark transition-colors hover:text-terracotta-text focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 sm:px-6 [&::-webkit-details-marker]:hidden">
                     {p.pergunta}
-                    <ChevronDown className="size-4 shrink-0 text-taupe transition-transform group-open:rotate-180" aria-hidden="true" />
+                    <span
+                      className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-brown transition-colors group-open:bg-terracotta group-open:text-bone"
+                      aria-hidden="true"
+                    >
+                      <Plus className="size-4 group-open:hidden" />
+                      <Minus className="hidden size-4 group-open:block" />
+                    </span>
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed whitespace-pre-wrap text-taupe">{p.resposta}</p>
+                  <p className="px-5 pb-5 text-sm leading-relaxed whitespace-pre-wrap text-taupe sm:px-6 sm:pr-18">{p.resposta}</p>
                 </details>
               ))}
             </div>
