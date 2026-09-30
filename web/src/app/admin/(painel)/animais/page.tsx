@@ -55,12 +55,15 @@ export default async function PaginaAnimais({
         >
           {animais.map((a) => (
             <tr key={a.id}>
-              <td className={`${classeCelula} w-16`}>
+              {/* `w-px`: a coluna encolhe até o tamanho da foto. Com largura fixa
+                  (era `w-16`), o padding da célula comia quase tudo e o
+                  `max-width: 100%` das imagens espremia a foto numa tira. */}
+              <td className={`${classeCelula} w-px`}>
                 {a.fotoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- já é WebP redimensionado no upload
-                  <img src={a.fotoUrl} alt="" className="size-11 rounded-xl object-cover" />
+                  <img src={a.fotoUrl} alt="" className="size-14 max-w-none rounded-xl object-cover" />
                 ) : (
-                  <span className="block size-11 rounded-xl bg-muted" aria-hidden="true" />
+                  <span className="block size-14 rounded-xl bg-muted" aria-hidden="true" />
                 )}
               </td>
               <td className={classeCelula}>
