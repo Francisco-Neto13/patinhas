@@ -9,7 +9,7 @@ import { fotosPets } from "@/lib/pets";
 /** Pixels por segundo. Devagar de propósito: é ambientação, não slideshow. */
 const VELOCIDADE = 28;
 
-export function VitrinePets() {
+export function VitrinePets({ titulo }: { titulo: string }) {
   const trilhoRef = useRef<HTMLDivElement>(null);
   const movimentoReduzido = useMovimentoReduzido();
 
@@ -103,7 +103,7 @@ export function VitrinePets() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold text-brown-dark sm:text-4xl">
-            É por eles que a gente faz isso
+            {titulo}
           </h2>
           {/*
             ⚠️ A ressalva não é rodapé jurídico, é a regra do projeto.

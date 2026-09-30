@@ -2,8 +2,10 @@ import { ArrowRight, Heart, PawPrint } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Blob, PawPrintScatter } from "@/components/decorative/blob";
 import { Reveal } from "@/components/reveal";
+import type { Textos } from "@/lib/conteudo/ler";
 
-export function Hero() {
+/** Textos editáveis pelo painel (Conteúdo > Página inicial). Padrões em campos.ts. */
+export function Hero({ textos: t }: { textos: Textos }) {
   return (
     <section id="top" className="relative overflow-hidden pt-16 pb-24 sm:pt-24 sm:pb-32">
       <Blob className="pointer-events-none absolute -top-24 -right-24 size-[420px] text-terracotta/15" />
@@ -15,31 +17,29 @@ export function Hero() {
         <Reveal>
           <span className="inline-flex items-center gap-2 rounded-full bg-beige px-4 py-1.5 text-sm font-medium text-brown">
             <PawPrint className="size-4" />
-            Tecnologia a serviço da proteção animal
+            {t["inicio.selo"]}
           </span>
         </Reveal>
 
         <Reveal delay={0.1}>
           <h1 className="mt-6 text-balance text-4xl font-semibold text-brown-dark sm:text-6xl">
-            Cada patinha merece um lar, um prato cheio e um abrigo bem cuidado
+            {t["inicio.titulo"]}
           </h1>
         </Reveal>
 
         <Reveal delay={0.2}>
           <p className="mt-6 max-w-2xl text-pretty text-lg text-taupe">
-            O Patinhas conecta abrigos, voluntários e a comunidade para reduzir a
-            falta de recursos, organizar as doações e dar mais visibilidade aos
-            animais que esperam por adoção.
+            {t["inicio.subtitulo"]}
           </p>
         </Reveal>
 
         <Reveal delay={0.3}>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a href="#ajudar" className={buttonVariants({ size: "lg", className: "rounded-full" })}>
-              Quero ajudar <Heart className="size-4" />
+            <a href={t["inicio.botao1.link"]} className={buttonVariants({ size: "lg", className: "rounded-full" })}>
+              {t["inicio.botao1.texto"]} <Heart className="size-4" />
             </a>
             <a
-              href="#animais"
+              href={t["inicio.botao2.link"]}
               className={buttonVariants({
                 size: "lg",
                 variant: "outline",
@@ -50,10 +50,25 @@ export function Hero() {
                 className: "rounded-full text-brown-dark hover:bg-beige",
               })}
             >
-              Ver animais para adoção <ArrowRight className="size-4" />
+              {t["inicio.botao2.texto"]} <ArrowRight className="size-4" />
             </a>
           </div>
         </Reveal>
+
+        {t["inicio.imagem"] && (
+          <Reveal delay={0.4} className="mt-12 w-full">
+            {/* Sem descrição preenchida no painel, a imagem é tratada como
+                decorativa (alt vazio): um alt genérico como "imagem do topo"
+                só faria o leitor de tela anunciar ruído. */}
+            {/* eslint-disable-next-line @next/next/no-img-element -- já é WebP redimensionado no upload */}
+            <img
+              src={t["inicio.imagem"]}
+              alt={t["inicio.imagemAlt"]}
+              data-imagem-decorativa=""
+              className="mx-auto aspect-[16/9] w-full max-w-3xl rounded-3xl object-cover shadow-md"
+            />
+          </Reveal>
+        )}
       </div>
     </section>
   );

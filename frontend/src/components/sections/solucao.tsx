@@ -1,5 +1,6 @@
 import { Package, HandHeart, Sparkles } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import type { Textos } from "@/lib/conteudo/ler";
 import { AnimalDeFundo } from "@/components/decorative/animal-de-fundo";
 
 const pilares = [
@@ -23,23 +24,28 @@ const pilares = [
   },
 ];
 
-export function Solucao() {
+export function Solucao({ textos: t }: { textos: Textos }) {
+  // Ícones ficam no código; título e texto de cada card vêm do painel.
+  const itens = pilares.map((item, i) => ({
+    ...item,
+    titulo: t[`solucao.card${i + 1}.titulo`],
+    descricao: t[`solucao.card${i + 1}.texto`],
+  }));
   return (
     <section id="solucao" className="relative overflow-hidden py-20 sm:py-28">
       <AnimalDeFundo animal="cachorro" className="-left-14 bottom-8 size-64 text-brown/[0.09] lg:size-80" />
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold text-brown-dark sm:text-4xl">
-            Como o Patinhas ajuda
+            {t["solucao.titulo"]}
           </h2>
           <p className="mt-4 text-taupe">
-            Uma plataforma gratuita que une a organização interna do abrigo com
-            uma comunidade mais próxima e engajada.
+            {t["solucao.intro"]}
           </p>
         </Reveal>
 
         <div className="mt-14 grid gap-6 sm:grid-cols-3">
-          {pilares.map((p, i) => (
+          {itens.map((p, i) => (
             <Reveal key={p.titulo} delay={i * 0.1}>
               <div className="pulse-on-hover group flex h-full flex-col items-center rounded-3xl border border-border bg-bone p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                 <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">

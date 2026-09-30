@@ -7,6 +7,7 @@ import {
 } from "@/components/acessibilidade/preferencias";
 import { BarraAcessibilidade } from "@/components/acessibilidade/barra-acessibilidade";
 import { VLibras } from "@/components/acessibilidade/vlibras";
+import { obterTextos } from "@/lib/conteudo/ler";
 
 const fredoka = Fredoka({
   variable: "--font-fredoka",
@@ -19,11 +20,23 @@ const nunito = Nunito({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Patinhas",
-  description:
-    "Patinhas conecta abrigos, voluntários, doadores e adotantes para reduzir a falta de recursos e a sobrecarga dos abrigos de animais.",
-};
+/*
+ * Nome e ícone da aba vêm das Configurações do painel.
+ *
+ * ⚠️ Por isso NÃO existe mais `src/app/icon.png`: ícone definido por arquivo
+ * tem prioridade sobre o `generateMetadata` (documentação do Next), e o
+ * favicon enviado pelo painel seria ignorado em silêncio. O ícone original
+ * virou `public/icone-padrao.png`, usado quando nenhum foi enviado.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await obterTextos();
+  return {
+    title: t["config.nome"],
+    description:
+      "Patinhas conecta abrigos, voluntários, doadores e adotantes para reduzir a falta de recursos e a sobrecarga dos abrigos de animais.",
+    icons: { icon: t["config.favicon"] || "/icone-padrao.png" },
+  };
+}
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
