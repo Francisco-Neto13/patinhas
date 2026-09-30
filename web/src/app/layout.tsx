@@ -40,9 +40,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
+    // `suppressHydrationWarning`: o SCRIPT_SEM_FLASH grava as preferências
+    // salvas (data-movimento, contraste, fonte) no <html> ANTES do React
+    // hidratar, de propósito. Vale só para os atributos deste elemento; um
+    // erro de hidratação nos filhos continua aparecendo.
     <html
       lang="pt-BR"
       className={`${fredoka.variable} ${nunito.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {/*
