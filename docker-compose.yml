@@ -26,7 +26,7 @@ services:
   # requisição, e pareceria bug de código.
   patinhas-migrate:
     build:
-      context: ./frontend
+      context: ./web
       target: migrator
     container_name: patinhas-migrate
     restart: "no"
@@ -38,10 +38,10 @@ services:
     networks:
       - interna
 
-  patinhas-frontend:
+  patinhas-web:
     build:
-      context: ./frontend
-    container_name: patinhas-frontend
+      context: ./web
+    container_name: patinhas-web
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://patinhas:${POSTGRES_PASSWORD}@patinhas-db:5432/patinhas?schema=public
