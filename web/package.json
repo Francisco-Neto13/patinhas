@@ -9,6 +9,7 @@
     "lint": "eslint",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
+    "db:exemplo": "node --env-file=.env scripts/popular-exemplo.mjs",
     "admin:criar": "node --env-file=.env scripts/criar-admin.mjs",
     "uploads:limpar": "node --env-file=.env scripts/limpar-uploads.mjs",
     "pix:testar": "node --experimental-strip-types --no-warnings scripts/testar-pix.mjs"
