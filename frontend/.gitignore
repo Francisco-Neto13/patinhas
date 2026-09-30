@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# exemplo de variaveis de ambiente (o .env de verdade continua ignorado acima)
+!.env.example
+
+# client do Prisma: gerado a partir do schema a cada build
+/src/generated/
+
+# imagens enviadas pelo admin em desenvolvimento
+/uploads/

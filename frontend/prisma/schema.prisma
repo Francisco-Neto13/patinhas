@@ -1,0 +1,404 @@
+// Banco da area administrativa do Patinhas (Fase 1).
+//
+// Espelha documentation/administracao/ADMINISTRACAO.MD, secoes 2, 3, 4, 9, 10
+// e 11. Doacoes (registros), Banners, Pagina Inicial, Conteudo e Configuracoes
+// ficam para a Fase 2.
+//
+// Nomes em portugues de proposito: o documento de requisitos, o time e a
+// interface falam portugues, e o schema e onde os tres se encontram.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Usuarios, papeis e sessoes (secao 11)
+// ---------------------------------------------------------------------------
+
+enum Papel {
+  /// Acesso completo a plataforma.
+  ADMIN_PATINHAS
+  /// Acesso restrito aos dados da propria organizacao.
+  ADMIN_ONG
+}
+
+model Usuario {
+  id           String   @id @default(cuid())
+  nome         String
+  email        String   @unique
+  /// scrypt: "scrypt$<salt hex>$<hash hex>". Ver src/lib/auth/senha.ts.
+  senhaHash    String
+  papel        Papel
+  ativo        Boolean  @default(true)
+
+  /// Obrigatorio para ADMIN_ONG, sempre nulo para ADMIN_PATINHAS. A regra e
+  /// garantida na camada de dados (src/lib/admin/usuarios.ts), porque o
+  /// Postgres nao expressa "obrigatorio dependendo de outra coluna" sem CHECK.
+  organizacaoId String?
+  organizacao   Organizacao? @relation(fields: [organizacaoId], references: [id], onDelete: SetNull)
+
+  ultimoAcessoEm DateTime?
+  criadoEm       DateTime  @default(now())
+  atualizadoEm   DateTime  @updatedAt
+
+  sessoes    Sessao[]
+  atividades Atividade[]
+
+  @@index([organizacaoId])
+}
+
+/// Sessao guardada no banco, e nao num token assinado, por um motivo: desativar
+/// um usuario (secao 11.3) precisa derrubar o acesso DELE na hora. Com token
+/// autocontido, a pessoa desativada continuaria entrando ate o token expirar.
+model Sessao {
+  id        String   @id @default(cuid())
+  /// SHA-256 do token do cookie. O token em si nunca e gravado: quem ler o
+  /// banco nao consegue se passar por ninguem.
+  tokenHash String   @unique
+  usuarioId String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  expiraEm  DateTime
+  criadoEm  DateTime @default(now())
+
+  @@index([usuarioId])
+}
+
+// ---------------------------------------------------------------------------
+// ONGs / Abrigos (secao 2)
+// ---------------------------------------------------------------------------
+
+enum TipoOrganizacao {
+  ONG
+  ABRIGO
+  PROTETOR_INDEPENDENTE
+  PROJETO
+}
+
+enum StatusOrganizacao {
+  PUBLICADA
+  RASCUNHO
+  INATIVA
+}
+
+model Organizacao {
+  id                String            @id @default(cuid())
+  nome              String
+  tipo              TipoOrganizacao
+  status            StatusOrganizacao @default(RASCUNHO)
+
+  capaUrl           String?
+  /// Caminhos em /uploads. Ordem = ordem de exibicao.
+  galeria           String[]          @default([])
+
+  descricaoCurta    String
+  descricaoCompleta String?
+
+  cidade            String
+  /// UF com 2 letras.
+  estado            String            @db.Char(2)
+  endereco          String?
+
+  /// Chave PIX já normalizada (ver src/lib/pix.ts). O QR Code e o "Pix copia
+  /// e cola" são GERADOS a partir dela, nunca guardados: assim não existe
+  /// um QR que aponte para uma chave diferente da exibida.
+  chavePix          String?
+  linkDoacao        String?
+  whatsapp          String?
+  instagram         String?
+  facebook          String?
+  site              String?
+
+  criadoEm          DateTime          @default(now())
+  atualizadoEm      DateTime          @updatedAt
+
+  usuarios        Usuario[]
+  animais         Animal[]
+  necessidades    Necessidade[]
+  atividades      Atividade[]
+  formasDoacao    FormaDoacao[]
+  registrosDoacao RegistroDoacao[]
+  campanhas       Banner[]
+
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Animais (secao 3)
+// ---------------------------------------------------------------------------
+
+enum Sexo {
+  MACHO
+  FEMEA
+  NAO_INFORMADO
+}
+
+enum Porte {
+  PEQUENO
+  MEDIO
+  GRANDE
+}
+
+enum StatusAnimal {
+  DISPONIVEL
+  EM_ADOCAO
+  ADOTADO
+  INATIVO
+}
+
+model Animal {
+  id            String       @id @default(cuid())
+  nome          String
+  fotoUrl       String?
+  galeria       String[]     @default([])
+  sexo          Sexo         @default(NAO_INFORMADO)
+  /// Texto livre ("2 anos", "8 meses", "filhote"): e assim que as ONGs
+  /// informam, e uma data de nascimento exata quase nunca e conhecida.
+  idade         String?
+  porte         Porte?
+  raca          String?
+  descricao     String?
+  cidade        String?
+  status        StatusAnimal @default(DISPONIVEL)
+  /// Se vazio, o site usa o contato da organizacao responsavel.
+  linkAdocao    String?
+
+  organizacaoId String
+  organizacao   Organizacao  @relation(fields: [organizacaoId], references: [id], onDelete: Restrict)
+
+  criadoEm      DateTime     @default(now())
+  atualizadoEm  DateTime     @updatedAt
+
+  @@index([organizacaoId])
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Necessidades (secao 4)
+// ---------------------------------------------------------------------------
+
+enum TipoNecessidade {
+  RACAO
+  MEDICAMENTO
+  DINHEIRO
+  LIMPEZA
+  HIGIENE
+  OUTROS
+}
+
+enum Prioridade {
+  NORMAL
+  URGENTE
+}
+
+enum StatusNecessidade {
+  ATIVA
+  ATENDIDA
+  INATIVA
+}
+
+model Necessidade {
+  id            String            @id @default(cuid())
+  tipo          TipoNecessidade
+  item          String
+  descricao     String?
+  quantidade    Decimal?          @db.Decimal(12, 2)
+  unidade       String?
+  prioridade    Prioridade        @default(NORMAL)
+  status        StatusNecessidade @default(ATIVA)
+  validadeEm    DateTime?
+  linkAjuda     String?
+  atendidaEm    DateTime?
+
+  organizacaoId String
+  organizacao   Organizacao       @relation(fields: [organizacaoId], references: [id], onDelete: Restrict)
+
+  /// "Data de cadastro" do documento.
+  criadoEm      DateTime          @default(now())
+  atualizadoEm  DateTime          @updatedAt
+
+  @@index([organizacaoId])
+  @@index([status, prioridade])
+}
+
+// ---------------------------------------------------------------------------
+// Contatos / Mensagens (secao 9)
+// ---------------------------------------------------------------------------
+
+enum StatusMensagem {
+  NAO_LIDA
+  LIDA
+  RESPONDIDA
+  ARQUIVADA
+}
+
+model Mensagem {
+  id        String         @id @default(cuid())
+  nome      String
+  email     String
+  telefone  String
+  mensagem  String
+  status    StatusMensagem @default(NAO_LIDA)
+  /// SHA-256 do IP, so para limitar envio em massa. O IP em si nao e guardado:
+  /// para frear spam basta saber que foi a MESMA origem, nao qual.
+  origemHash String
+  criadoEm  DateTime       @default(now())
+
+  @@index([status])
+  @@index([origemHash, criadoEm])
+}
+
+// ---------------------------------------------------------------------------
+// Atividade recente (secao 10.5)
+// ---------------------------------------------------------------------------
+
+model Atividade {
+  id            String       @id @default(cuid())
+  /// Texto pronto para exibir: "Thor foi adicionado".
+  descricao     String
+  /// Chave do icone no dashboard: organizacao, animal, necessidade, mensagem, usuario.
+  tipo          String
+
+  usuarioId     String?
+  usuario       Usuario?     @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+  /// Permite ao ADMIN_ONG ver so a atividade da propria organizacao.
+  organizacaoId String?
+  organizacao   Organizacao? @relation(fields: [organizacaoId], references: [id], onDelete: Cascade)
+
+  criadoEm      DateTime     @default(now())
+
+  @@index([criadoEm])
+  @@index([organizacaoId, criadoEm])
+}
+
+// ===========================================================================
+// FASE 2
+// ===========================================================================
+
+// ---------------------------------------------------------------------------
+// Doações (seção 5)
+// ---------------------------------------------------------------------------
+
+enum TipoFormaDoacao {
+  PIX
+  VAQUINHA
+  OUTRA_PLATAFORMA
+  RACAO
+  MEDICAMENTO
+  OUTRO
+}
+
+/// Canais de ajuda de uma organização, além da chave PIX principal que já
+/// fica no cadastro dela (seção 5.1).
+model FormaDoacao {
+  id            String          @id @default(cuid())
+  tipo          TipoFormaDoacao
+  titulo        String
+  descricao     String?
+  link          String?
+  /// Menor aparece primeiro.
+  ordem         Int             @default(0)
+  ativa         Boolean         @default(true)
+
+  organizacaoId String
+  organizacao   Organizacao     @relation(fields: [organizacaoId], references: [id], onDelete: Cascade)
+
+  criadoEm      DateTime        @default(now())
+  atualizadoEm  DateTime        @updatedAt
+
+  @@index([organizacaoId])
+}
+
+enum TipoRegistroDoacao {
+  DINHEIRO
+  RACAO
+  MEDICAMENTO
+  OUTRO
+}
+
+/// Doações INFORMADAS pela própria organização (seção 5.2). Controle interno:
+/// não aparece no site e não é medição oficial do que foi arrecadado.
+model RegistroDoacao {
+  id            String             @id @default(cuid())
+  data          DateTime
+  tipo          TipoRegistroDoacao
+  valor         Decimal?           @db.Decimal(12, 2)
+  item          String?
+  quantidade    Decimal?           @db.Decimal(12, 2)
+  unidade       String?
+  doador        String?
+  anonimo       Boolean            @default(false)
+  observacao    String?
+
+  organizacaoId String
+  organizacao   Organizacao        @relation(fields: [organizacaoId], references: [id], onDelete: Cascade)
+
+  criadoEm      DateTime           @default(now())
+  atualizadoEm  DateTime           @updatedAt
+
+  @@index([organizacaoId, data])
+}
+
+// ---------------------------------------------------------------------------
+// Banners e destaques (seção 8)
+// ---------------------------------------------------------------------------
+
+enum StatusBanner {
+  ATIVO
+  INATIVO
+}
+
+model Banner {
+  id           String       @id @default(cuid())
+  titulo       String
+  descricao    String?
+  imagemUrl    String?
+  link         String?
+  textoBotao   String?
+  ordem        Int          @default(0)
+  /// Janela de exibição. Vazio = sem limite daquele lado.
+  inicioEm     DateTime?
+  fimEm        DateTime?
+  status       StatusBanner @default(ATIVO)
+
+  /// Nulo = banner da equipe Patinhas. Preenchido = campanha de uma ONG
+  /// (seção 11.2), gerenciada pelo admin dela e exibida só enquanto a
+  /// organização estiver publicada.
+  organizacaoId String?
+  organizacao   Organizacao? @relation(fields: [organizacaoId], references: [id], onDelete: Cascade)
+
+  criadoEm     DateTime     @default(now())
+  atualizadoEm DateTime     @updatedAt
+
+  @@index([organizacaoId])
+}
+
+// ---------------------------------------------------------------------------
+// Conteúdo editável (seções 6, 7 e 12)
+// ---------------------------------------------------------------------------
+
+/// Textos da página inicial, das seções institucionais e configurações gerais.
+///
+/// Chave/valor de propósito: QUAIS chaves existem, com que rótulo e valor
+/// padrão, é definido no código (src/lib/conteudo/campos.ts). O banco só guarda
+/// o que foi alterado. Chave ausente = texto padrão, então um banco vazio
+/// mostra o site exatamente como ele era antes do painel existir.
+model Conteudo {
+  chave        String   @id
+  valor        String
+  atualizadoEm DateTime @updatedAt
+}
+
+model PerguntaFrequente {
+  id           String   @id @default(cuid())
+  pergunta     String
+  resposta     String
+  ordem        Int      @default(0)
+  ativa        Boolean  @default(true)
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+}
