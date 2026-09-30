@@ -22,7 +22,8 @@ export function SiteFooter({
   ].filter(Boolean) as { href: string; rotulo: string; Icone: typeof Mail; externo: boolean }[];
 
   return (
-    <footer className="border-t border-border bg-brown-dark py-10 text-bone/80">
+    // `id="rodape"`: alvo do atalho "Ir para o rodapé" (4) da barra do topo.
+    <footer id="rodape" tabIndex={-1} className="border-t border-border bg-brown-dark py-10 text-bone/80 outline-none">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-4 text-center sm:px-6">
         <span className="flex items-center gap-2 font-heading text-lg font-semibold text-bone">
           <LogoMarca url={t["config.logo"]} tamanho={28} className="size-7" />

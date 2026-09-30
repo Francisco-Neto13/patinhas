@@ -6,6 +6,7 @@ import { Dialog } from "@base-ui/react/dialog";
 import { X } from "lucide-react";
 import { COOKIE_BARRA, type GrupoNav } from "@/lib/admin/navegacao";
 import { cn } from "@/lib/utils";
+import { LinkPularConteudo } from "@/components/acessibilidade/link-pular-conteudo";
 import { BarraLateral, type Contadores } from "./barra-lateral";
 import { BarraSuperior } from "./barra-superior";
 import type { UsuarioDaCasca } from "./menu-conta";
@@ -65,6 +66,7 @@ export function CascaPainel({
 
   return (
     <div className="flex min-h-screen w-full">
+      <LinkPularConteudo />
       <aside
         className={cn(
           "sticky top-0 hidden h-screen shrink-0 border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200 ease-out motion-reduce:transition-none lg:block",
@@ -102,11 +104,8 @@ export function CascaPainel({
           aoAbrirGaveta={() => setGaveta(true)}
         />
         {/* Largura toda, como num CRM: tabela e cartão aproveitam a tela. Quem
-            precisa de linha curta (formulário, subtítulo) se limita sozinho.
-            `pb-24`: com a barra recolhida, o botão flutuante de Acessibilidade
-            passa por cima do conteúdo; a folga garante que o fim da página
-            (o botão de salvar, quase sempre) nunca fique escondido embaixo dele. */}
-        <main id="conteudo" tabIndex={-1} className="flex-1 px-4 pt-10 pb-24 outline-none sm:px-6">
+            precisa de linha curta (formulário, subtítulo) se limita sozinho. */}
+        <main id="conteudo" tabIndex={-1} className="flex-1 px-4 pt-10 pb-12 outline-none sm:px-6">
           <div className="painel-entrada w-full">{children}</div>
         </main>
       </div>

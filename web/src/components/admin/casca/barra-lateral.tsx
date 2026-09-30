@@ -60,24 +60,20 @@ export function BarraLateral({
       <nav aria-label="Menu do painel" className="flex-1 overflow-y-auto px-2 py-3">
         <Tooltip.Provider delay={200}>
           {grupos.map((grupo, g) => (
-            <div key={grupo.rotulo} className="px-2 py-1">
-              {/* Recolhida, o título do grupo vira um traço: a separação entre
-                  grupos continua visível, e o texto segue para leitor de tela. */}
+            <div key={grupo.rotulo} className={recolhida ? "px-2" : "px-2 py-1"}>
+              {/* Recolhida, o título do grupo some da tela e os ícones seguem
+                  numa coluna só, como nos CRMs da casa: separar grupos só faz
+                  sentido quando dá para ler o nome deles. O texto continua para
+                  o leitor de tela, que é quem nomeia a lista abaixo. */}
               <div
                 id={`${base}-${g}`}
-                className={cn(
-                  "flex h-6 items-center px-2 font-sans text-[10px] font-medium tracking-[0.22em] text-sidebar-rotulo uppercase",
-                  recolhida && "justify-center px-0",
-                )}
+                className={
+                  recolhida
+                    ? "sr-only"
+                    : "flex h-6 items-center px-2 font-sans text-[10px] font-medium tracking-[0.22em] text-sidebar-rotulo uppercase"
+                }
               >
-                {recolhida ? (
-                  <>
-                    <span className="h-px w-5 bg-sidebar-border" aria-hidden="true" />
-                    <span className="sr-only">{grupo.rotulo}</span>
-                  </>
-                ) : (
-                  grupo.rotulo
-                )}
+                {grupo.rotulo}
               </div>
               {/* A lista leva o nome do grupo. Título h2 aqui entraria no
                   esqueleto da página antes do h1, a cada tela. */}
@@ -146,11 +142,6 @@ export function BarraLateral({
           ))}
         </Tooltip.Provider>
       </nav>
-
-      {/* O botão flutuante de Acessibilidade fica fixo no canto inferior
-          esquerdo, bem em cima deste rodapé. O espaço é dele: sem a folga, o
-          último item do menu ficaria por baixo do botão. */}
-      <div className="h-20 shrink-0 border-t border-sidebar-border" aria-hidden="true" />
     </div>
   );
 }

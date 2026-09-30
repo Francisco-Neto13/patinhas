@@ -5,8 +5,6 @@ import {
   ProvedorAcessibilidade,
   SCRIPT_SEM_FLASH,
 } from "@/components/acessibilidade/preferencias";
-import { BarraAcessibilidade } from "@/components/acessibilidade/barra-acessibilidade";
-import { VLibras } from "@/components/acessibilidade/vlibras";
 import { obterTextos } from "@/server/dados/conteudo";
 
 const fredoka = Fredoka({
@@ -62,23 +60,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: SCRIPT_SEM_FLASH }} />
 
         {/*
-          Primeiro elemento focavel da pagina, de proposito.
-
-          Fica fora da tela ate receber foco pelo teclado, e ai aparece. Sem
-          ele, quem navega por Tab passa pelo logo, pelos 6 links do menu e
-          pelo CTA em TODA visita. E, para chegar ao formulario de contato,
-          ainda atravessa os 17 links dos cards de plataforma.
-
-          `accessKey="1"` e o atalho que o eMAG padroniza para "ir ao
-          conteudo" nos sites brasileiros.
+          O "pular para o conteúdo" não mora mais aqui: no site público ele é o
+          primeiro atalho da barra de acessibilidade do topo, e no painel e no
+          login é o <LinkPularConteudo />. Ver components/acessibilidade/.
         */}
-        <a
-          href="#conteudo"
-          accessKey="1"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-primary focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-primary-foreground focus:shadow-lg focus:outline-none focus:ring-3 focus:ring-ring/50"
-        >
-          Pular para o conteudo principal
-        </a>
 
         {/*
           ⚠️ Sem JavaScript, o site fica quase em branco.
@@ -92,14 +77,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <style>{`[data-reveal]{opacity:1 !important;transform:none !important}`}</style>
         </noscript>
 
-        <ProvedorAcessibilidade>
-          {children}
-          <BarraAcessibilidade />
-        </ProvedorAcessibilidade>
-
-        {/* Fora do provider: o widget monta a propria interface em shadow DOM e
-            nao le nenhuma das nossas preferencias. */}
-        <VLibras />
+        {/* Os controles de acessibilidade e o VLibras ficam por página: barra
+            no topo e VLibras no site público, "Minha conta" no painel. */}
+        <ProvedorAcessibilidade>{children}</ProvedorAcessibilidade>
       </body>
     </html>
   );

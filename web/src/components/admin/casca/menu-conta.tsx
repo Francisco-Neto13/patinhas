@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Menu } from "@base-ui/react/menu";
-import { ChevronDown, ExternalLink, LogOut, UserRound } from "lucide-react";
+import { Accessibility, ChevronDown, ExternalLink, LogOut, UserRound } from "lucide-react";
 import { sair } from "@/app/admin/login/actions";
 import { DialogoConfirmacao } from "@/components/admin/confirmacao";
 
@@ -74,6 +74,9 @@ export function MenuConta({ usuario }: { usuario: UsuarioDaCasca }) {
               <div className="py-1">
                 <Menu.LinkItem render={<Link href="/admin/conta" />} className={classeItem} closeOnClick>
                   <UserRound className="size-4" aria-hidden="true" /> Minha conta
+                </Menu.LinkItem>
+                <Menu.LinkItem render={<Link href="/admin/conta#acessibilidade" />} className={classeItem} closeOnClick>
+                  <Accessibility className="size-4" aria-hidden="true" /> Acessibilidade
                 </Menu.LinkItem>
                 <Menu.LinkItem href="/" target="_blank" rel="noreferrer" className={classeItem} closeOnClick>
                   <ExternalLink className="size-4" aria-hidden="true" /> Ver o site

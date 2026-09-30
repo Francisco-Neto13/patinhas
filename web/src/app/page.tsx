@@ -1,3 +1,5 @@
+import { BarraTopoAcessibilidade } from "@/components/acessibilidade/barra-topo";
+import { VLibras } from "@/components/acessibilidade/vlibras";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Hero } from "@/components/sections/hero";
@@ -23,8 +25,9 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
+      <BarraTopoAcessibilidade />
       <SiteHeader nome={textos["config.nome"]} logoUrl={textos["config.logo"] || undefined} temOng={organizacoes.length > 0} />
-      {/* Alvo do "Pular para o conteudo" do layout. `tabIndex={-1}` deixa o
+      {/* Alvo do "Ir para o conteúdo" da barra de acessibilidade. `tabIndex={-1}` deixa o
           <main> receber foco programaticamente: sem isso, alguns navegadores
           rolam ate a ancora mas mantem o foco no link, e o proximo Tab volta
           para o menu, e o pulo nao acontece de verdade. */}
@@ -52,6 +55,9 @@ export default async function Home() {
         />
       </main>
       <SiteFooter textos={textos} parceira={organizacoes.length === 1 ? organizacoes[0] : null} />
+      {/* Só no site público. O painel é ferramenta interna de poucos usuários
+          conhecidos, e lá o widget flutuante só cobria tabela e formulário. */}
+      <VLibras />
     </div>
   );
 }

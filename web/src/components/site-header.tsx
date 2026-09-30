@@ -22,7 +22,8 @@ export function SiteHeader({ nome, logoUrl, temOng = true }: { nome: string; log
           {nome}
         </a>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        {/* `id="menu"`: alvo do atalho "Ir para o menu" (2) da barra do topo. */}
+        <nav id="menu" tabIndex={-1} aria-label="Menu principal" className="hidden items-center gap-6 outline-none md:flex">
           {itens.map((item) => (
             <a
               key={item.href}
