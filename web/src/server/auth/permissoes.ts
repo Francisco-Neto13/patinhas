@@ -24,10 +24,18 @@ export function escopoDaOrganizacao(sessao: SessaoAdmin): { organizacaoId?: stri
   return { organizacaoId: sessao.organizacaoId! };
 }
 
-/** Filtro por `id` para a própria tabela de organizações. */
-export function escopoDeOrganizacoes(sessao: SessaoAdmin): { id?: string } {
+/**
+ * Filtro para a própria tabela de organizações.
+ *
+ * ⚠️ Vai dentro de um `AND`, e não como `{ id }`, de propósito. O uso é
+ * `{ id, ...escopoDeOrganizacoes(sessao) }`, e com `{ id: <org dele> }` o
+ * spread SOBRESCREVIA o `id` pedido: a busca pela organização de outra ONG
+ * achava a do próprio admin, passava na checagem, e o `update` gravava na
+ * outra. Com o `AND`, as duas condições valem juntas.
+ */
+export function escopoDeOrganizacoes(sessao: SessaoAdmin): { AND?: { id: string }[] } {
   if (sessao.papel === "ADMIN_PATINHAS") return {};
-  return { id: sessao.organizacaoId! };
+  return { AND: [{ id: sessao.organizacaoId! }] };
 }
 
 /** A organização informada num formulário pertence a quem está logado? */
