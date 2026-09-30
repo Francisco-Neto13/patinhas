@@ -1,41 +1,66 @@
-import { PawPrint } from "lucide-react";
-import { PlatformCard } from "@/components/platform-card";
+import { AtSign, PawPrint } from "lucide-react";
 import { Reveal } from "@/components/reveal";
-import { siteConfig } from "@/lib/site-config";
 import { AnimalDeFundo } from "@/components/decorative/animal-de-fundo";
+import { CartaoAnimal } from "@/components/publico/cartoes";
+import type { DadosPublicos } from "@/lib/publico/dados";
 
-// Sem abrigo parceiro confirmado hoje, então esta seção não mostra nenhum
-// animal (real ou de exemplo). Só redireciona para redes de adoção
-// brasileiras reais. Ver documentation/contexto/CONTEXTO.MD, seção
-// "Catálogo de adoção".
-export function Animais() {
+/*
+ * Os animais da ONG parceira, cadastrados no painel. Só aparecem os de
+ * organização PUBLICADA, com status Disponível ou Em processo de adoção.
+ *
+ * Sem nenhum, a seção diz isso com todas as letras e aponta para onde os
+ * próximos resgates aparecem primeiro (o Instagram da ONG). Nunca mostra
+ * animal de exemplo: o CONTEXTO.MD proíbe sugerir um pet que não existe.
+ */
+export function Animais({
+  animais,
+  organizacoes,
+}: {
+  animais: DadosPublicos["animais"];
+  organizacoes: DadosPublicos["organizacoes"];
+}) {
+  const temAnimais = animais.length > 0;
+  const varias = organizacoes.length > 1;
+  const ong = organizacoes.length === 1 ? organizacoes[0] : null;
+
   return (
-    <section id="animais" className="relative overflow-hidden bg-beige/60 py-20 sm:py-28">
+    <section id="animais" className="relative scroll-mt-16 overflow-hidden py-20 sm:py-28">
       <AnimalDeFundo animal="coelho" className="-right-12 top-40 size-64 -scale-x-100 text-brown/[0.10] lg:size-80" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <PawPrint className="size-7" />
+            <PawPrint className="size-7" aria-hidden="true" />
           </div>
-          <h2 className="mt-5 text-3xl font-semibold text-brown-dark sm:text-4xl">
-            Animais para adoção
-          </h2>
+          <h2 className="mt-5 text-3xl font-semibold text-brown-dark sm:text-4xl">Animais para adoção</h2>
           <p className="mt-4 text-taupe">
-            O Patinhas ainda não tem um abrigo parceiro confirmado, então não
-            mostramos nenhum animal aqui pra não arriscar exibir um bichinho
-            que não existe de verdade. Enquanto isso, conheça de perto as
-            maiores redes de adoção reais do Brasil. Cada uma delas já
-            transformou milhares de histórias.
+            {temAnimais
+              ? ong
+                ? `Estes bichinhos estão sob os cuidados de ${ong.nome}. O botão de cada um leva direto ao contato de quem cuida dele.`
+                : "Estes bichinhos estão sob os cuidados das nossas ONGs parceiras. O botão de cada um leva direto ao contato de quem cuida dele."
+              : "Nenhum animal esperando adoção neste momento. Os próximos resgates aparecem aqui assim que forem cadastrados."}
           </p>
+          {!temAnimais && ong?.instagram && (
+            <a
+              href={ong.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-borda-forte bg-bone px-5 py-2.5 text-sm font-semibold text-brown-dark hover:bg-muted focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+            >
+              <AtSign className="size-4" aria-hidden="true" /> Acompanhe os resgates no Instagram
+              <span className="sr-only"> de {ong.nome} (abre em nova aba)</span>
+            </a>
+          )}
         </Reveal>
 
-        <div className="mt-14 grid gap-8 sm:grid-cols-2">
-          {siteConfig.adoptionPlatforms.map((platform, i) => (
-            <Reveal key={platform.url} delay={(i % 2) * 0.1} className="h-full">
-              <PlatformCard platform={platform} />
-            </Reveal>
-          ))}
-        </div>
+        {temAnimais && (
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {animais.map((a, i) => (
+              <Reveal key={a.id} delay={(i % 3) * 0.08} className="h-full">
+                <CartaoAnimal animal={a} mostrarOrganizacao={varias} />
+              </Reveal>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
