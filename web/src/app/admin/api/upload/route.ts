@@ -24,7 +24,9 @@ export async function POST(request: NextRequest) {
    */
   const origem = request.headers.get("origin");
   const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  if (!origem || new URL(origem).host !== host) {
+  // `URL.canParse` antes: `Origin: null` (iframe com sandbox, por exemplo)
+  // faria o `new URL` lançar erro e a rota responder 500 em vez de 403.
+  if (!origem || !URL.canParse(origem) || new URL(origem).host !== host) {
     return NextResponse.json({ erro: "Origem não permitida." }, { status: 403 });
   }
 
