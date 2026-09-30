@@ -26,6 +26,7 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --color-sidebar-rotulo: var(--sidebar-rotulo);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -114,13 +115,17 @@
   --chart-4: var(--beige);
   --chart-5: var(--brown-dark);
   --radius: 1.1rem;
-  --sidebar: var(--bone);
-  --sidebar-foreground: var(--brown-dark);
-  --sidebar-primary: var(--brown);
-  --sidebar-primary-foreground: var(--bone);
-  --sidebar-accent: var(--beige);
-  --sidebar-accent-foreground: var(--brown-dark);
-  --sidebar-border: #e4d2bc;
+  /* Barra lateral do painel: escura, como num CRM. O marrom e' o da marca
+     levado quase ao preto, para o conteudo (creme) continuar sendo o que chama
+     o olho. Contrastes sobre #2b1f17: texto 11.9:1, rotulo de grupo 6.7:1. */
+  --sidebar: #2b1f17;
+  --sidebar-foreground: #eadccb;
+  --sidebar-rotulo: #b9a590;
+  --sidebar-primary: var(--terracotta);
+  --sidebar-primary-foreground: #2b1f17;
+  --sidebar-accent: #45332a;
+  --sidebar-accent-foreground: var(--bone);
+  --sidebar-border: #3d2d23;
   --sidebar-ring: var(--terracotta);
 }
 
@@ -157,6 +162,40 @@
   h3,
   h4 {
     @apply font-heading;
+  }
+}
+
+/* Hierarquia de texto do painel: sobretitulo, titulo, subtitulo. Ver
+   documentation/administracao/LAYOUT-PAINEL.MD, secao 5. */
+@layer components {
+  .painel-sobretitulo {
+    @apply text-[11px] font-medium tracking-[0.18em] text-taupe uppercase;
+  }
+  .painel-titulo {
+    @apply font-heading text-3xl font-semibold tracking-tight text-brown-dark;
+  }
+  .painel-subtitulo {
+    @apply text-sm text-taupe;
+  }
+  .painel-entrada {
+    animation: painel-entrada 0.35s ease-out;
+  }
+}
+
+@keyframes painel-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .painel-entrada {
+    animation: none;
   }
 }
 
@@ -235,15 +274,16 @@
   --borda-forte: #ffffff;
   --input: #ffffff;
   --ring: #ffd400;
-}
 
-/* ⚠️ Os logos das plataformas são PNGs de marca, muitos com desenho escuro
-   e fundo transparente. Sobre o preto do alto contraste eles sumiriam. O
-   selo mantém fundo branco para a marca continuar reconhecível. É o mesmo
-   motivo pelo qual o favicon de um site não muda com o tema do navegador. */
-:root[data-contraste="alto"] [data-selo-plataforma] {
-  background: #ffffff;
-  border-color: #ffffff;
+  --sidebar: #000000;
+  --sidebar-foreground: #ffffff;
+  --sidebar-rotulo: #ffffff;
+  --sidebar-primary: #ffd400;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #ffd400;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #ffffff;
+  --sidebar-ring: #ffd400;
 }
 
 /* ⚠️ Os bichinhos de fundo somem no alto contraste.
