@@ -31,6 +31,9 @@ export async function criarSessao(usuarioId: string) {
   const expiraEm = new Date(Date.now() + DURACAO_MS);
 
   await db.sessao.create({ data: { tokenHash: hashDoToken(token), usuarioId, expiraEm } });
+  // Faxina das vencidas. `obterSessao` já as recusa, mas sem isto a tabela
+  // cresceria para sempre. O login é raro o bastante para pagar esta consulta.
+  await db.sessao.deleteMany({ where: { expiraEm: { lt: new Date() } } });
   await db.usuario.update({ where: { id: usuarioId }, data: { ultimoAcessoEm: new Date() } });
 
   (await cookies()).set(NOME_COOKIE, token, {
