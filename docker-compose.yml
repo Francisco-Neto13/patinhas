@@ -1,12 +1,66 @@
 services:
+  # Banco. Só na rede interna: nenhuma porta publicada e fora da rede do nginx,
+  # então nada fora deste compose alcança o Postgres.
+  patinhas-db:
+    image: postgres:17-alpine
+    container_name: patinhas-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: patinhas
+      # `:?` faz o compose RECUSAR subir sem senha, em vez de criar um banco
+      # com senha em branco. Definida no .env da raiz (ver .env.example).
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env da raiz}
+      POSTGRES_DB: patinhas
+    volumes:
+      - patinhas-db:/var/lib/postgresql/data
+    networks:
+      - interna
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U patinhas -d patinhas"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # Aplica as migrations e termina. A aplicação só sobe depois que ele sai com
+  # sucesso: subir o site contra um banco sem a tabela nova daria erro a cada
+  # requisição, e pareceria bug de código.
+  patinhas-migrate:
+    build:
+      context: ./frontend
+      target: migrator
+    container_name: patinhas-migrate
+    restart: "no"
+    environment:
+      DATABASE_URL: postgresql://patinhas:${POSTGRES_PASSWORD}@patinhas-db:5432/patinhas?schema=public
+    depends_on:
+      patinhas-db:
+        condition: service_healthy
+    networks:
+      - interna
+
   patinhas-frontend:
     build:
       context: ./frontend
     container_name: patinhas-frontend
     restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://patinhas:${POSTGRES_PASSWORD}@patinhas-db:5432/patinhas?schema=public
+    volumes:
+      # Fotos enviadas pelo admin. Sobrevivem a rebuild e deploy.
+      - patinhas-uploads:/app/uploads
+    depends_on:
+      patinhas-migrate:
+        condition: service_completed_successfully
+    # Continua sem `ports:`: quem expõe o site é o nginx, pela rede `nginx`.
     networks:
       - nginx
+      - interna
 
 networks:
   nginx:
     external: true
+  interna: {}
+
+volumes:
+  patinhas-db:
+  patinhas-uploads:

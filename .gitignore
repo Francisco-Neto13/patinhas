@@ -1,2 +1,5 @@
-# Documento interno — não faz parte do repositório público
+# Documento interno. Não faz parte do repositório público.
 documentation/
+
+# Senha do banco usada pelo docker-compose. Nunca vai para o git.
+.env

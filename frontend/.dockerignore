@@ -4,3 +4,7 @@ node_modules
 .env*
 npm-debug.log*
 *.md
+# Gerado de novo dentro do build; a cópia local pode estar desatualizada.
+src/generated
+# Fotos enviadas em desenvolvimento não vão para a imagem.
+uploads
