@@ -7,6 +7,9 @@ import * as organizacoes from "@/server/dados/organizacoes";
 import { formatarData, TIPO_REGISTRO_DOACAO } from "@/lib/admin/rotulos";
 import { AvisoOk, CabecalhoPagina, classeCelula, LinkEditar, Tabela, Vazio } from "@/components/admin/ui";
 import { AbasDoacoes } from "../abas";
+import { AcoesDaLinha } from "@/components/admin/acoes-da-linha";
+import { exclusao } from "@/lib/admin/exclusao";
+import { excluirRegistro } from "../actions";
 
 export const metadata: Metadata = { title: "Registros de doações" };
 
@@ -53,7 +56,7 @@ export default async function PaginaRegistros({ searchParams }: { searchParams: 
       {registros.length === 0 ? (
         <Vazio>Nenhuma doação registrada.</Vazio>
       ) : (
-        <Tabela legenda="Doações registradas" cabecalhos={["Data", "Doação", "Tipo", ...(patinhas ? ["Organização"] : []), "Doador"]}>
+        <Tabela legenda="Doações registradas" cabecalhos={["Data", "Doação", "Tipo", ...(patinhas ? ["Organização"] : []), "Doador", "Ações"]}>
           {registros.map((r) => (
             <tr key={r.id}>
               <td className={`${classeCelula} whitespace-nowrap text-taupe`}>{formatarData(r.data)}</td>
@@ -66,6 +69,7 @@ export default async function PaginaRegistros({ searchParams }: { searchParams: 
               <td className={classeCelula}>{TIPO_REGISTRO_DOACAO[r.tipo].rotulo}</td>
               {patinhas && <td className={classeCelula}>{r.organizacao.nome}</td>}
               <td className={`${classeCelula} text-taupe`}>{r.anonimo ? "Anônimo" : (r.doador ?? "Não informado")}</td>
+              <td className={`${classeCelula} w-px`}><AcoesDaLinha nome={`registro de ${formatarData(r.data)}`} hrefEditar={`/admin/doacoes/registros/${r.id}`} excluir={{ ...exclusao.registroDoacao(), acao: excluirRegistro.bind(null, r.id) }} /></td>
             </tr>
           ))}
         </Tabela>

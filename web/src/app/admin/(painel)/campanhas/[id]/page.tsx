@@ -4,6 +4,7 @@ import * as campanhas from "@/server/dados/campanhas";
 import * as organizacoes from "@/server/dados/organizacoes";
 import { paraCampoData } from "@/lib/admin/formulario";
 import { BotaoExcluir } from "@/components/admin/botao-excluir";
+import { exclusao } from "@/lib/admin/exclusao";
 import { CabecalhoPagina } from "@/components/admin/ui";
 import { FormularioBanner } from "../formulario";
 import { excluirBanner, salvarBanner } from "../actions";
@@ -24,7 +25,7 @@ export default async function PaginaEditarBanner({ params }: { params: Promise<{
         organizacoes={opcoes}
       />
       <section className="mt-10 border-t border-border pt-6">
-        <BotaoExcluir acao={excluirBanner.bind(null, b.id)} titulo="Excluir esta campanha?" descricao={`"${b.titulo}" sai do site e do painel. Não dá para desfazer. Para só pausar, mude o status para Inativo.`} />
+        <BotaoExcluir acao={excluirBanner.bind(null, b.id)} {...exclusao.campanha(b.titulo)} />
       </section>
     </>
   );

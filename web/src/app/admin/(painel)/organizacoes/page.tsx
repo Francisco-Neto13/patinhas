@@ -4,6 +4,9 @@ import { ehAdminPatinhas } from "@/server/auth/permissoes";
 import * as dadosOrganizacoes from "@/server/dados/organizacoes";
 import { STATUS_ORGANIZACAO, TIPO_ORGANIZACAO } from "@/lib/admin/rotulos";
 import { AvisoOk, CabecalhoPagina, classeCelula, LinkEditar, Selo, Tabela, Vazio } from "@/components/admin/ui";
+import { AcoesDaLinha } from "@/components/admin/acoes-da-linha";
+import { exclusao } from "@/lib/admin/exclusao";
+import { excluirOrganizacao } from "./actions";
 
 export const metadata: Metadata = { title: "ONGs / Abrigos" };
 
@@ -32,7 +35,7 @@ export default async function PaginaOrganizacoes({ searchParams }: { searchParam
       {organizacoes.length === 0 ? (
         <Vazio>Nenhuma organização cadastrada ainda.</Vazio>
       ) : (
-        <Tabela legenda="Organizações cadastradas" cabecalhos={["Nome", "Tipo", "Cidade", "Animais", "Necessidades ativas", "Status"]}>
+        <Tabela legenda="Organizações cadastradas" cabecalhos={["Nome", "Tipo", "Cidade", "Animais", "Necessidades ativas", "Status", "Ações"]}>
           {organizacoes.map((o) => (
             <tr key={o.id}>
               <td className={classeCelula}>
@@ -47,6 +50,7 @@ export default async function PaginaOrganizacoes({ searchParams }: { searchParam
               <td className={classeCelula}>
                 <Selo tom={STATUS_ORGANIZACAO[o.status].tom}>{STATUS_ORGANIZACAO[o.status].rotulo}</Selo>
               </td>
+              <td className={`${classeCelula} w-px`}><AcoesDaLinha nome={o.nome} hrefEditar={`/admin/organizacoes/${o.id}`} excluir={patinhas ? { ...exclusao.organizacao(o.nome), acao: excluirOrganizacao.bind(null, o.id) } : undefined} /></td>
             </tr>
           ))}
         </Tabela>

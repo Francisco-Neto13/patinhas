@@ -30,6 +30,8 @@ export type PedidoConfirmacao = {
   /** Pinta o botão de confirmar de vermelho. Use em exclusão e desativação. */
   destrutiva?: boolean;
   rotuloCancelar?: string;
+  /** Só um aviso, sem escolha: some o botão de cancelar. */
+  soAviso?: boolean;
 };
 
 export function DialogoConfirmacao({
@@ -72,9 +74,11 @@ export function DialogoConfirmacao({
                 </div>
               </div>
               <div className="mt-7 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-                <AlertDialog.Close className={buttonVariants({ variant: "outline", size: "lg", className: "h-10 rounded-full px-5" })}>
-                  {pedido.rotuloCancelar ?? "Cancelar"}
-                </AlertDialog.Close>
+                {!pedido.soAviso && (
+                  <AlertDialog.Close className={buttonVariants({ variant: "outline", size: "lg", className: "h-10 rounded-full px-5" })}>
+                    {pedido.rotuloCancelar ?? "Cancelar"}
+                  </AlertDialog.Close>
+                )}
                 <button
                   type="button"
                   onClick={() => {

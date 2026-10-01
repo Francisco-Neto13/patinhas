@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import * as conteudo from "@/server/dados/conteudo";
 import { AvisoOk, CabecalhoPagina, classeCelula, LinkEditar, Selo, Tabela, Vazio } from "@/components/admin/ui";
+import { AcoesDaLinha } from "@/components/admin/acoes-da-linha";
+import { exclusao } from "@/lib/admin/exclusao";
+import { excluirPergunta } from "./actions";
 
 export const metadata: Metadata = { title: "Perguntas frequentes" };
 
@@ -15,12 +18,13 @@ export default async function PaginaFaq({ searchParams }: { searchParams: Promis
       {perguntas.length === 0 ? (
         <Vazio>Nenhuma pergunta ainda. Enquanto não houver nenhuma ativa, o site não mostra a seção.</Vazio>
       ) : (
-        <Tabela legenda="Perguntas frequentes" cabecalhos={["Ordem", "Pergunta", "Situação"]}>
+        <Tabela legenda="Perguntas frequentes" cabecalhos={["Ordem", "Pergunta", "Situação", "Ações"]}>
           {perguntas.map((p) => (
             <tr key={p.id}>
               <td className={`${classeCelula} w-20 text-taupe`}>{p.ordem}</td>
               <td className={classeCelula}><LinkEditar href={`/admin/conteudo/faq/${p.id}`} nome={p.pergunta} /></td>
               <td className={classeCelula}><Selo tom={p.ativa ? "verde" : "neutro"}>{p.ativa ? "No site" : "Oculta"}</Selo></td>
+              <td className={`${classeCelula} w-px`}><AcoesDaLinha nome={p.pergunta} hrefEditar={`/admin/conteudo/faq/${p.id}`} excluir={{ ...exclusao.pergunta(), acao: excluirPergunta.bind(null, p.id) }} /></td>
             </tr>
           ))}
         </Tabela>

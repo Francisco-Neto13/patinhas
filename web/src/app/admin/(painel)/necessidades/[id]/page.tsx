@@ -4,6 +4,7 @@ import * as necessidades from "@/server/dados/necessidades";
 import * as organizacoes from "@/server/dados/organizacoes";
 import { formatarData } from "@/lib/admin/rotulos";
 import { BotaoExcluir } from "@/components/admin/botao-excluir";
+import { exclusao } from "@/lib/admin/exclusao";
 import { CabecalhoPagina } from "@/components/admin/ui";
 import { FormularioNecessidade } from "../formulario";
 import { excluirNecessidade, salvarNecessidade } from "../actions";
@@ -44,7 +45,7 @@ export default async function PaginaEditarNecessidade({ params }: { params: Prom
         <p className="mt-1 mb-4 text-sm text-taupe">
           Apaga do histórico. Para tirar do site mantendo o registro, marque como Atendida ou Inativa.
         </p>
-        <BotaoExcluir acao={excluirNecessidade.bind(null, n.id)} titulo="Excluir esta necessidade?" descricao={`"${n.item}" sai do painel e do site. Não dá para desfazer. Se ela foi atendida, marque como Atendida: assim ela conta nos números.`} />
+        <BotaoExcluir acao={excluirNecessidade.bind(null, n.id)} {...exclusao.necessidade(n.item)} />
       </section>
     </>
   );

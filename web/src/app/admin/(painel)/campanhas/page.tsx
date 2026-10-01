@@ -5,6 +5,9 @@ import * as campanhas from "@/server/dados/campanhas";
 import { formatarData } from "@/lib/admin/rotulos";
 import { aindaNaoComecou, jaTerminou } from "@/lib/datas";
 import { AvisoOk, CabecalhoPagina, classeCelula, LinkEditar, Selo, Tabela, Vazio } from "@/components/admin/ui";
+import { AcoesDaLinha } from "@/components/admin/acoes-da-linha";
+import { exclusao } from "@/lib/admin/exclusao";
+import { excluirBanner } from "./actions";
 
 export const metadata: Metadata = { title: "Campanhas e destaques" };
 
@@ -39,7 +42,7 @@ export default async function PaginaCampanhas({ searchParams }: { searchParams: 
       {banners.length === 0 ? (
         <Vazio>Nenhuma campanha. Sem campanhas ativas, o site não mostra a faixa de destaques.</Vazio>
       ) : (
-        <Tabela legenda="Campanhas" cabecalhos={["Ordem", "Título", ...(patinhas ? ["De quem"] : []), "Período", "Situação"]}>
+        <Tabela legenda="Campanhas" cabecalhos={["Ordem", "Título", ...(patinhas ? ["De quem"] : []), "Período", "Situação", "Ações"]}>
           {banners.map((b) => {
             const s = situacao(b);
             return (
@@ -51,6 +54,7 @@ export default async function PaginaCampanhas({ searchParams }: { searchParams: 
                   {b.inicioEm || b.fimEm ? `${b.inicioEm ? formatarData(b.inicioEm) : "Já"} até ${b.fimEm ? formatarData(b.fimEm) : "sem fim"}` : "Sem limite"}
                 </td>
                 <td className={classeCelula}><Selo tom={s.tom}>{s.texto}</Selo></td>
+                <td className={`${classeCelula} w-px`}><AcoesDaLinha nome={b.titulo} hrefEditar={`/admin/campanhas/${b.id}`} excluir={{ ...exclusao.campanha(b.titulo), acao: excluirBanner.bind(null, b.id) }} /></td>
               </tr>
             );
           })}

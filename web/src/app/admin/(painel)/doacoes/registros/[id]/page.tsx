@@ -4,6 +4,7 @@ import * as doacoes from "@/server/dados/doacoes";
 import * as organizacoes from "@/server/dados/organizacoes";
 import { paraCampoData } from "@/lib/admin/formulario";
 import { BotaoExcluir } from "@/components/admin/botao-excluir";
+import { exclusao } from "@/lib/admin/exclusao";
 import { CabecalhoPagina } from "@/components/admin/ui";
 import { FormularioRegistro } from "../../formularios";
 import { excluirRegistro, salvarRegistro } from "../../actions";
@@ -27,7 +28,7 @@ export default async function PaginaEditarRegistro({ params }: { params: Promise
         inicial={{ ...r, data: paraCampoData(r.data), valor: texto(r.valor), quantidade: texto(r.quantidade) }}
       />
       <section className="mt-10 border-t border-border pt-6">
-        <BotaoExcluir acao={excluirRegistro.bind(null, r.id)} titulo="Excluir este registro de doação?" descricao="O registro some do controle interno e dos totais. Não dá para desfazer." />
+        <BotaoExcluir acao={excluirRegistro.bind(null, r.id)} {...exclusao.registroDoacao()} />
       </section>
     </>
   );

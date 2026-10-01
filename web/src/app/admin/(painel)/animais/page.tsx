@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { exigirSessao } from "@/server/auth/sessao";
 import { ehAdminPatinhas } from "@/server/auth/permissoes";
 import * as dadosAnimais from "@/server/dados/animais";
@@ -6,6 +7,9 @@ import * as organizacoes from "@/server/dados/organizacoes";
 import { nomeDoAnimal, PORTE, SEXO, STATUS_ANIMAL } from "@/lib/admin/rotulos";
 import type { StatusAnimal } from "@/generated/prisma/enums";
 import { AvisoOk, CabecalhoPagina, classeCelula, Filtros, LinkEditar, Selo, Tabela, Vazio } from "@/components/admin/ui";
+import { excluirAnimal } from "./actions";
+import { exclusao } from "@/lib/admin/exclusao";
+import { AcoesDaLinha } from "@/components/admin/acoes-da-linha";
 
 export const metadata: Metadata = { title: "Animais" };
 
@@ -51,7 +55,7 @@ export default async function PaginaAnimais({
       ) : (
         <Tabela
           legenda="Animais cadastrados"
-          cabecalhos={["", "Nome", "Resumo", ...(ehAdminPatinhas(sessao) ? ["Organização"] : []), "Status"]}
+          cabecalhos={["Foto", "Nome", "Resumo", ...(ehAdminPatinhas(sessao) ? ["Organização"] : []), "Status", "Ações"]}
         >
           {animais.map((a) => (
             <tr key={a.id}>
@@ -59,12 +63,17 @@ export default async function PaginaAnimais({
                   (era `w-16`), o padding da célula comia quase tudo e o
                   `max-width: 100%` das imagens espremia a foto numa tira. */}
               <td className={`${classeCelula} w-px`}>
-                {a.fotoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- já é WebP redimensionado no upload
-                  <img src={a.fotoUrl} alt="" className="size-14 max-w-none rounded-xl object-cover" />
-                ) : (
-                  <span className="block size-14 rounded-xl bg-muted" aria-hidden="true" />
-                )}
+                {/* A foto também abre a edição: é o alvo maior da linha. Fora da
+                    ordem do Tab e escondida do leitor de tela, porque o nome e o
+                    botão Editar já levam ao mesmo lugar. */}
+                <Link href={`/admin/animais/${a.id}`} tabIndex={-1} aria-hidden="true" className="block rounded-xl transition-opacity hover:opacity-85">
+                  {a.fotoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- já é WebP redimensionado no upload
+                    <img src={a.fotoUrl} alt="" className="size-14 max-w-none rounded-xl object-cover" />
+                  ) : (
+                    <span className="block size-14 rounded-xl bg-muted" />
+                  )}
+                </Link>
               </td>
               <td className={classeCelula}>
                 <LinkEditar href={`/admin/animais/${a.id}`} nome={nomeDoAnimal(a.nome)} />
@@ -76,6 +85,7 @@ export default async function PaginaAnimais({
               <td className={classeCelula}>
                 <Selo tom={STATUS_ANIMAL[a.status].tom}>{STATUS_ANIMAL[a.status].rotulo}</Selo>
               </td>
+              <td className={`${classeCelula} w-px`}><AcoesDaLinha nome={nomeDoAnimal(a.nome)} hrefEditar={`/admin/animais/${a.id}`} excluir={{ ...exclusao.animal(a.nome), acao: excluirAnimal.bind(null, a.id) }} /></td>
             </tr>
           ))}
         </Tabela>

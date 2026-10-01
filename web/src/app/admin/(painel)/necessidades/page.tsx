@@ -7,9 +7,11 @@ import * as organizacoes from "@/server/dados/organizacoes";
 import { formatarData, PRIORIDADE, STATUS_NECESSIDADE, TIPO_NECESSIDADE } from "@/lib/admin/rotulos";
 import type { StatusNecessidade } from "@/generated/prisma/enums";
 import { AvisoOk, CabecalhoPagina, classeCelula, Filtros, LinkEditar, Selo, Tabela, Vazio } from "@/components/admin/ui";
-import { marcarAtendida } from "./actions";
+import { excluirNecessidade, marcarAtendida } from "./actions";
 import { jaTerminou } from "@/lib/datas";
 import { FormularioPainel } from "@/components/admin/confirmacao";
+import { AcoesDaLinha } from "@/components/admin/acoes-da-linha";
+import { exclusao } from "@/lib/admin/exclusao";
 
 export const metadata: Metadata = { title: "Necessidades" };
 
@@ -53,7 +55,7 @@ export default async function PaginaNecessidades({ searchParams }: { searchParam
       ) : (
         <Tabela
           legenda="Necessidades"
-          cabecalhos={["Item", "Tipo", "Quantidade", ...(ehAdminPatinhas(sessao) ? ["ONG"] : []), "Cadastro", "Prioridade", "Status", ""]}
+          cabecalhos={["Item", "Tipo", "Quantidade", ...(ehAdminPatinhas(sessao) ? ["ONG"] : []), "Cadastro", "Prioridade", "Status", "", "Ações"]}
         >
           {necessidades.map((n) => {
             const vencida = n.status === "ATIVA" && n.validadeEm && jaTerminou(n.validadeEm, hoje);
@@ -96,6 +98,7 @@ export default async function PaginaNecessidades({ searchParams }: { searchParam
                     </FormularioPainel>
                   )}
                 </td>
+                <td className={`${classeCelula} w-px`}><AcoesDaLinha nome={n.item} hrefEditar={`/admin/necessidades/${n.id}`} excluir={{ ...exclusao.necessidade(n.item), acao: excluirNecessidade.bind(null, n.id) }} /></td>
               </tr>
             );
           })}

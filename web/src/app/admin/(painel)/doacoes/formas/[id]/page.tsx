@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import * as doacoes from "@/server/dados/doacoes";
 import * as organizacoes from "@/server/dados/organizacoes";
 import { BotaoExcluir } from "@/components/admin/botao-excluir";
+import { exclusao } from "@/lib/admin/exclusao";
 import { CabecalhoPagina } from "@/components/admin/ui";
 import { FormularioForma } from "../../formularios";
 import { excluirForma, salvarForma } from "../../actions";
@@ -19,7 +20,7 @@ export default async function PaginaEditarForma({ params }: { params: Promise<{ 
       <CabecalhoPagina titulo={f.titulo} descricao="Editar forma de doação." />
       <FormularioForma acao={salvarForma.bind(null, f.id)} inicial={{ ...f, ordem: String(f.ordem) }} organizacoes={opcoes} />
       <section className="mt-10 border-t border-border pt-6">
-        <BotaoExcluir acao={excluirForma.bind(null, f.id)} titulo="Excluir esta forma de doação?" descricao={`"${f.titulo}" sai do card da organização no site. Não dá para desfazer. Para só esconder, desmarque Mostrar no site.`} />
+        <BotaoExcluir acao={excluirForma.bind(null, f.id)} {...exclusao.formaDoacao(f.titulo)} />
       </section>
     </>
   );

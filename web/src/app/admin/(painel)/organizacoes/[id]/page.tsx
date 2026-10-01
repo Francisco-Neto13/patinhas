@@ -4,6 +4,7 @@ import { exigirSessao } from "@/server/auth/sessao";
 import { ehAdminPatinhas } from "@/server/auth/permissoes";
 import * as organizacoes from "@/server/dados/organizacoes";
 import { BotaoExcluir } from "@/components/admin/botao-excluir";
+import { exclusao } from "@/lib/admin/exclusao";
 import { CabecalhoPagina } from "@/components/admin/ui";
 import { PixOrganizacao } from "@/components/publico/pix-organizacao";
 import { FormularioOrganizacao } from "../formulario";
@@ -48,7 +49,7 @@ export default async function PaginaEditarOrganizacao({ params }: { params: Prom
           <p className="mt-1 mb-4 text-sm text-taupe">
             Só é possível excluir organizações sem animais e sem necessidades. Para tirar do site sem perder nada, mude o status para Inativa.
           </p>
-          <BotaoExcluir acao={excluirOrganizacao.bind(null, org.id)} titulo={`Excluir ${org.nome}?`} descricao="A organização, as formas de doação, as campanhas e os registros dela são apagados, e os usuários dela ficam sem organização. Não dá para desfazer. Para só tirar do site, mude o status para Inativa." />
+          <BotaoExcluir acao={excluirOrganizacao.bind(null, org.id)} {...exclusao.organizacao(org.nome)} />
         </section>
       )}
     </>

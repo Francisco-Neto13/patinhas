@@ -6,6 +6,7 @@ import * as mensagens from "@/server/dados/mensagens";
 import { formatarDataHora, STATUS_MENSAGEM } from "@/lib/admin/rotulos";
 import type { StatusMensagem } from "@/generated/prisma/enums";
 import { BotaoExcluir } from "@/components/admin/botao-excluir";
+import { exclusao } from "@/lib/admin/exclusao";
 import { FormularioPainel } from "@/components/admin/confirmacao";
 import { Sobretitulo } from "@/components/admin/sobretitulo";
 import { Selo } from "@/components/admin/ui";
@@ -103,11 +104,7 @@ export default async function PaginaMensagem({ params }: { params: Promise<{ id:
       <section className="mt-10 border-t border-border pt-6" aria-labelledby="zona-exclusao">
         <h2 id="zona-exclusao" className="font-heading text-xl font-semibold text-brown-dark">Excluir mensagem</h2>
         <p className="mt-1 mb-4 text-sm text-taupe">Apaga definitivamente. Para só tirar da caixa de entrada, arquive.</p>
-        <BotaoExcluir
-          acao={excluirMensagem.bind(null, m.id)}
-          titulo="Excluir esta mensagem?"
-          descricao="A mensagem e os dados de contato de quem escreveu são apagados. Não dá para desfazer. Para só tirar da caixa de entrada, arquive."
-        />
+        <BotaoExcluir acao={excluirMensagem.bind(null, m.id)} {...exclusao.mensagem()} />
       </section>
     </>
   );

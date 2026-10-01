@@ -3,6 +3,9 @@ import * as dadosMensagens from "@/server/dados/mensagens";
 import { formatarDataHora, STATUS_MENSAGEM } from "@/lib/admin/rotulos";
 import type { StatusMensagem } from "@/generated/prisma/enums";
 import { AvisoOk, CabecalhoPagina, classeCelula, Filtros, LinkEditar, Selo, Tabela, Vazio } from "@/components/admin/ui";
+import { AcoesDaLinha } from "@/components/admin/acoes-da-linha";
+import { exclusao } from "@/lib/admin/exclusao";
+import { excluirMensagem } from "./actions";
 
 export const metadata: Metadata = { title: "Mensagens" };
 
@@ -33,7 +36,7 @@ export default async function PaginaMensagens({ searchParams }: { searchParams: 
       {mensagens.length === 0 ? (
         <Vazio>Nenhuma mensagem aqui.</Vazio>
       ) : (
-        <Tabela legenda="Mensagens recebidas" cabecalhos={["De", "Mensagem", "Recebida em", "Status"]}>
+        <Tabela legenda="Mensagens recebidas" cabecalhos={["De", "Mensagem", "Recebida em", "Status", "Ações"]}>
           {mensagens.map((m) => (
             // Não lida em negrito: é o padrão de caixa de e-mail que todo mundo já conhece.
             <tr key={m.id} className={m.status === "NAO_LIDA" ? "font-semibold" : undefined}>
@@ -48,6 +51,7 @@ export default async function PaginaMensagens({ searchParams }: { searchParams: 
               <td className={classeCelula}>
                 <Selo tom={STATUS_MENSAGEM[m.status].tom}>{STATUS_MENSAGEM[m.status].rotulo}</Selo>
               </td>
+              <td className={`${classeCelula} w-px`}><AcoesDaLinha nome={`mensagem de ${m.nome}`} modo="abrir" hrefEditar={`/admin/mensagens/${m.id}`} excluir={{ ...exclusao.mensagem(), acao: excluirMensagem.bind(null, m.id) }} /></td>
             </tr>
           ))}
         </Tabela>

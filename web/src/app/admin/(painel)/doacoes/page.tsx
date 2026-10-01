@@ -6,6 +6,9 @@ import * as organizacoes from "@/server/dados/organizacoes";
 import { TIPO_FORMA_DOACAO } from "@/lib/admin/rotulos";
 import { AvisoOk, CabecalhoPagina, classeCelula, LinkEditar, Selo, Tabela, Vazio } from "@/components/admin/ui";
 import { AbasDoacoes } from "./abas";
+import { AcoesDaLinha } from "@/components/admin/acoes-da-linha";
+import { exclusao } from "@/lib/admin/exclusao";
+import { excluirForma } from "./actions";
 
 export const metadata: Metadata = { title: "Formas de doação" };
 
@@ -31,13 +34,14 @@ export default async function PaginaFormas({ searchParams }: { searchParams: Pro
       {formas.length === 0 ? (
         <Vazio>Nenhuma forma de doação cadastrada.</Vazio>
       ) : (
-        <Tabela legenda="Formas de doação" cabecalhos={["Título", "Tipo", ...(patinhas ? ["Organização"] : []), "Situação"]}>
+        <Tabela legenda="Formas de doação" cabecalhos={["Título", "Tipo", ...(patinhas ? ["Organização"] : []), "Situação", "Ações"]}>
           {formas.map((f) => (
             <tr key={f.id}>
               <td className={classeCelula}><LinkEditar href={`/admin/doacoes/formas/${f.id}`} nome={f.titulo} /></td>
               <td className={classeCelula}>{TIPO_FORMA_DOACAO[f.tipo].rotulo}</td>
               {patinhas && <td className={classeCelula}>{f.organizacao.nome}</td>}
               <td className={classeCelula}><Selo tom={f.ativa ? "verde" : "neutro"}>{f.ativa ? "No site" : "Oculta"}</Selo></td>
+              <td className={`${classeCelula} w-px`}><AcoesDaLinha nome={f.titulo} hrefEditar={`/admin/doacoes/formas/${f.id}`} excluir={{ ...exclusao.formaDoacao(f.titulo), acao: excluirForma.bind(null, f.id) }} /></td>
             </tr>
           ))}
         </Tabela>

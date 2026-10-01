@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import * as conteudo from "@/server/dados/conteudo";
 import { BotaoExcluir } from "@/components/admin/botao-excluir";
+import { exclusao } from "@/lib/admin/exclusao";
 import { CabecalhoPagina } from "@/components/admin/ui";
 import { FormularioPergunta } from "../formulario";
 import { excluirPergunta, salvarPergunta } from "../actions";
@@ -18,7 +19,7 @@ export default async function PaginaEditarPergunta({ params }: { params: Promise
       <CabecalhoPagina titulo="Editar pergunta" />
       <FormularioPergunta acao={salvarPergunta.bind(null, p.id)} inicial={p} />
       <section className="mt-10 border-t border-border pt-6">
-        <BotaoExcluir acao={excluirPergunta.bind(null, p.id)} titulo="Excluir esta pergunta?" descricao="Ela sai da seção de perguntas frequentes do site. Não dá para desfazer. Para só esconder, desmarque Mostrar no site." />
+        <BotaoExcluir acao={excluirPergunta.bind(null, p.id)} {...exclusao.pergunta()} />
       </section>
     </>
   );
