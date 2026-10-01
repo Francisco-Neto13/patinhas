@@ -35,7 +35,9 @@ async function buscar() {
       where: { status: { in: ["DISPONIVEL", "EM_ADOCAO"] }, organizacao: publicada },
       // Disponíveis primeiro: quem está em processo de adoção já tem alguém.
       orderBy: [{ status: "asc" }, { atualizadoEm: "desc" }],
-      take: 12,
+      // Teto de segurança, não de exibição: o site mostra 6 e o "Ver mais"
+      // revela o resto. Um teto baixo esconderia animais sem aviso.
+      take: 60,
       select: {
         id: true, nome: true, fotoUrl: true, sexo: true, idade: true, porte: true, raca: true,
         cidade: true, status: true, linkAdocao: true, descricao: true,

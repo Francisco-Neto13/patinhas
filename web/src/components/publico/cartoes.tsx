@@ -37,11 +37,13 @@ export function CartaoAnimal({ animal, mostrarOrganizacao = false }: { animal: A
   const destino = animal.linkAdocao ?? contatoDe(animal.organizacao);
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border bg-bone shadow-sm">
-      <div className="relative aspect-[4/3] bg-gradient-to-br from-terracotta/20 via-beige to-brown/10">
+    // Mesmo hover dos cards de "O problema" e "Solução": sobe, ganha sombra e
+    // pulsa. A foto aproxima de leve, como na vitrine.
+    <article className="pulse-on-hover group flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border bg-bone shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-terracotta/20 via-beige to-brown/10">
         {animal.fotoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element -- já é WebP redimensionado no upload
-          <img src={animal.fotoUrl} alt={temNome(animal.nome) ? `Foto de ${animal.nome}` : "Foto do animal"} loading="lazy" className="size-full object-cover" data-imagem-decorativa="" />
+          <img src={animal.fotoUrl} alt={temNome(animal.nome) ? `Foto de ${animal.nome}` : "Foto do animal"} loading="lazy" className="size-full object-cover transition-transform duration-500 group-hover:scale-105" data-imagem-decorativa="" />
         ) : (
           <div className="flex size-full items-center justify-center" aria-hidden="true">
             <PawPrint className="size-16 text-brown/25" />
@@ -85,7 +87,7 @@ export function CartaoNecessidade({ necessidade: n, mostrarOrganizacao = false }
   const urgente = n.prioridade === "URGENTE";
 
   return (
-    <article className={cn("flex h-full flex-col rounded-[1.5rem] border bg-bone p-6 shadow-sm", urgente ? "border-terracotta/50" : "border-border")}>
+    <article className={cn("pulse-on-hover flex h-full flex-col rounded-[1.5rem] border bg-bone p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md", urgente ? "border-terracotta/50" : "border-border")}>
       <div className="flex flex-wrap items-center gap-2">
         {urgente && (
           <span className="inline-flex items-center gap-1 rounded-full bg-terracotta/20 px-2.5 py-0.5 text-xs font-semibold text-brown-dark">

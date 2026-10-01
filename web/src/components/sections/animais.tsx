@@ -2,6 +2,7 @@ import { AtSign, PawPrint } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { AnimalDeFundo } from "@/components/decorative/animal-de-fundo";
 import { CartaoAnimal } from "@/components/publico/cartoes";
+import { ListaVerMais } from "@/components/publico/lista-ver-mais";
 import type { DadosPublicos } from "@/server/dados/publico";
 
 /*
@@ -53,13 +54,16 @@ export function Animais({
         </Reveal>
 
         {temAnimais && (
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {animais.map((a, i) => (
+          // 6 por vez: duas fileiras no computador. Ver components/publico/lista-ver-mais.tsx.
+          <ListaVerMais
+            nomeDoItem="animais"
+            className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            itens={animais.map((a, i) => (
               <Reveal key={a.id} delay={(i % 3) * 0.08} className="h-full">
                 <CartaoAnimal animal={a} mostrarOrganizacao={varias} />
               </Reveal>
             ))}
-          </div>
+          />
         )}
       </div>
     </section>
