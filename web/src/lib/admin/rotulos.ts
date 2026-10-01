@@ -40,6 +40,19 @@ export const STATUS_ORGANIZACAO: Rotulo<StatusOrganizacao> = {
   INATIVA: { rotulo: "Inativa", tom: "neutro" },
 };
 
+/** O nome tem ao menos uma letra ou número? "." ou "-" não contam como nome. */
+export const temNome = (nome: string | null | undefined): nome is string => !!nome && /[\p{L}\p{N}]/u.test(nome);
+
+/**
+ * Nome do animal para mostrar. Resgate recente pode ainda não ter nome, e um
+ * campo vazio viraria link sem texto na lista e "Quero adotar " no site.
+ *
+ * Antes de o nome ser opcional, quem não sabia o nome digitava "." para
+ * conseguir salvar. Esses também viram "Sem nome ainda": um ponto como texto
+ * de link é um alvo de clique de 3 pixels.
+ */
+export const nomeDoAnimal = (nome: string | null | undefined) => (temNome(nome) ? nome.trim() : "Sem nome ainda");
+
 export const SEXO: Rotulo<Sexo> = {
   MACHO: { rotulo: "Macho" },
   FEMEA: { rotulo: "Fêmea" },

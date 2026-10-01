@@ -3,7 +3,7 @@ import { exigirSessao } from "@/server/auth/sessao";
 import { ehAdminPatinhas } from "@/server/auth/permissoes";
 import * as dadosAnimais from "@/server/dados/animais";
 import * as organizacoes from "@/server/dados/organizacoes";
-import { PORTE, SEXO, STATUS_ANIMAL } from "@/lib/admin/rotulos";
+import { nomeDoAnimal, PORTE, SEXO, STATUS_ANIMAL } from "@/lib/admin/rotulos";
 import type { StatusAnimal } from "@/generated/prisma/enums";
 import { AvisoOk, CabecalhoPagina, classeCelula, Filtros, LinkEditar, Selo, Tabela, Vazio } from "@/components/admin/ui";
 
@@ -67,7 +67,7 @@ export default async function PaginaAnimais({
                 )}
               </td>
               <td className={classeCelula}>
-                <LinkEditar href={`/admin/animais/${a.id}`} nome={a.nome} />
+                <LinkEditar href={`/admin/animais/${a.id}`} nome={nomeDoAnimal(a.nome)} />
               </td>
               <td className={`${classeCelula} text-taupe`}>
                 {[SEXO[a.sexo].rotulo, a.idade, a.porte && PORTE[a.porte].rotulo].filter(Boolean).join(" • ")}

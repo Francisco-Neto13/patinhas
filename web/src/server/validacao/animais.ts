@@ -1,12 +1,13 @@
 import "server-only";
 
 import { z } from "zod";
-import { galeria, imagemOpcional, linkOpcional, textoObrigatorio, textoOpcional } from "@/server/validacao/comum";
+import { galeria, imagemOpcional, linkOpcional, textoOpcional } from "@/server/validacao/comum";
 
 const vazioParaNull = (v: unknown) => (v === "" ? null : v);
 
 export const esquemaAnimal = z.object({
-  nome: textoObrigatorio("o nome do animal", 80),
+  // Opcional: resgate recente às vezes ainda não tem nome (o site mostra "Sem nome ainda").
+  nome: textoOpcional(80),
   organizacaoId: z.string({ error: "Escolha a organização responsável." }).min(1, "Escolha a organização responsável."),
   status: z.enum(["DISPONIVEL", "EM_ADOCAO", "ADOTADO", "INATIVO"], { error: "Escolha o status." }),
   sexo: z.enum(["MACHO", "FEMEA", "NAO_INFORMADO"], { error: "Escolha o sexo." }),

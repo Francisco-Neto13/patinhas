@@ -152,7 +152,9 @@ enum StatusAnimal {
 
 model Animal {
   id            String       @id @default(cuid())
-  nome          String
+  /// Opcional: resgate recente às vezes ainda não tem nome. A tela mostra
+  /// "Sem nome ainda" (ver nomeDoAnimal em src/lib/admin/rotulos.ts).
+  nome          String?
   fotoUrl       String?
   galeria       String[]     @default([])
   sexo          Sexo         @default(NAO_INFORMADO)

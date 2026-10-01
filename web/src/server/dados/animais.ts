@@ -1,5 +1,6 @@
 import "server-only";
 
+import { nomeDoAnimal } from "@/lib/admin/rotulos";
 import type { StatusAnimal } from "@/generated/prisma/enums";
 import { db } from "@/server/db";
 import { exigirSessao } from "@/server/auth/sessao";
@@ -66,7 +67,7 @@ export async function salvar(id: string | null, dados: FormData): Promise<Result
 
   await registrarAtividade({
     tipo: "animal",
-    descricao: id ? `${salvo.nome} foi atualizado` : `${salvo.nome} foi adicionado`,
+    descricao: id ? `${nomeDoAnimal(salvo.nome)} foi atualizado` : `${nomeDoAnimal(salvo.nome)} foi adicionado`,
     usuarioId: sessao.usuarioId,
     organizacaoId: salvo.organizacaoId,
   });
@@ -84,7 +85,7 @@ export async function excluir(id: string): Promise<Resultado> {
   await db.animal.delete({ where: { id } });
   await registrarAtividade({
     tipo: "animal",
-    descricao: `${animal.nome} foi removido`,
+    descricao: `${nomeDoAnimal(animal.nome)} foi removido`,
     usuarioId: sessao.usuarioId,
     organizacaoId: animal.organizacaoId,
   });

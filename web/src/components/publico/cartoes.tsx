@@ -1,6 +1,6 @@
 import { ExternalLink, HandCoins, MapPin, PawPrint, Siren } from "lucide-react";
 import type { DadosPublicos } from "@/server/dados/publico";
-import { PORTE, SEXO, TIPO_FORMA_DOACAO, TIPO_NECESSIDADE } from "@/lib/admin/rotulos";
+import { nomeDoAnimal, temNome, PORTE, SEXO, TIPO_FORMA_DOACAO, TIPO_NECESSIDADE } from "@/lib/admin/rotulos";
 import { PixOrganizacao } from "@/components/publico/pix-organizacao";
 import { cn } from "@/lib/utils";
 
@@ -41,7 +41,7 @@ export function CartaoAnimal({ animal, mostrarOrganizacao = false }: { animal: A
       <div className="relative aspect-[4/3] bg-gradient-to-br from-terracotta/20 via-beige to-brown/10">
         {animal.fotoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element -- já é WebP redimensionado no upload
-          <img src={animal.fotoUrl} alt={`Foto de ${animal.nome}`} loading="lazy" className="size-full object-cover" data-imagem-decorativa="" />
+          <img src={animal.fotoUrl} alt={temNome(animal.nome) ? `Foto de ${animal.nome}` : "Foto do animal"} loading="lazy" className="size-full object-cover" data-imagem-decorativa="" />
         ) : (
           <div className="flex size-full items-center justify-center" aria-hidden="true">
             <PawPrint className="size-16 text-brown/25" />
@@ -54,7 +54,7 @@ export function CartaoAnimal({ animal, mostrarOrganizacao = false }: { animal: A
         )}
       </div>
       <div className="flex flex-1 flex-col p-6">
-        <h3 className="font-heading text-xl font-semibold text-brown-dark">{animal.nome}</h3>
+        <h3 className="font-heading text-xl font-semibold text-brown-dark">{nomeDoAnimal(animal.nome)}</h3>
         {resumo && <p className="mt-1 text-sm text-taupe">{resumo}</p>}
         {animal.descricao && <p className="mt-3 line-clamp-3 text-sm text-taupe">{animal.descricao}</p>}
         {mostrarOrganizacao && (
@@ -69,7 +69,7 @@ export function CartaoAnimal({ animal, mostrarOrganizacao = false }: { animal: A
         <div className="mt-auto pt-5">
           {destino ? (
             <LinkExterno href={destino} className={classeBotao}>
-              Quero adotar {animal.nome} <ExternalLink className="size-4" aria-hidden="true" />
+              {temNome(animal.nome) ? `Quero adotar ${animal.nome}` : "Quero adotar"} <ExternalLink className="size-4" aria-hidden="true" />
             </LinkExterno>
           ) : (
             <p className="text-sm text-taupe">Fale com {animal.organizacao.nome} pelos canais da ONG.</p>

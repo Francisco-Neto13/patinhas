@@ -16,7 +16,7 @@ import type { EstadoFormulario } from "@/lib/admin/formulario";
 import { FormularioPainel, type PedidoConfirmacao } from "@/components/admin/confirmacao";
 
 export type AnimalForm = {
-  nome: string;
+  nome: string | null;
   organizacaoId: string;
   status: string;
   sexo: string;
@@ -73,12 +73,12 @@ export function FormularioAnimal({
       <ErroGeral texto={estado.erroGeral} />
 
       <Bloco titulo="Dados do animal">
-        <CampoTexto nome="nome" rotulo="Nome" obrigatorio max={80} padrao={v("nome")} erros={e.nome} />
+        <CampoTexto nome="nome" rotulo="Nome" max={80} padrao={v("nome")} erros={e.nome} ajuda={'Ainda sem nome? Deixe em branco: aparece como "Sem nome ainda".'} />
         <CampoSelecao nome="status" rotulo="Status" obrigatorio opcoes={opcoes(STATUS_ANIMAL)} padrao={v("status") || "DISPONIVEL"} erros={e.status} ajuda="Disponível e Em processo de adoção aparecem no site." />
         <CampoSelecao nome="sexo" rotulo="Sexo" obrigatorio opcoes={opcoes(SEXO)} padrao={v("sexo") || "NAO_INFORMADO"} erros={e.sexo} />
         <CampoSelecao nome="porte" rotulo="Porte" opcoes={opcoes(PORTE)} vazio="Não informado" padrao={v("porte")} erros={e.porte} />
-        <CampoTexto nome="idade" rotulo="Idade" max={30} placeholder="2 anos, 8 meses, filhote..." padrao={v("idade")} erros={e.idade} />
-        <CampoTexto nome="raca" rotulo="Raça" max={60} placeholder="Sem raça definida" padrao={v("raca")} erros={e.raca} />
+        <CampoTexto nome="idade" rotulo="Idade" max={30} placeholder="2 anos, 8 meses, filhote..." padrao={v("idade")} erros={e.idade} ajuda="Em branco se não souber." />
+        <CampoTexto nome="raca" rotulo="Raça" max={60} placeholder="Sem raça definida" padrao={v("raca")} erros={e.raca} ajuda="Em branco se não souber." />
         <CampoArea nome="descricao" rotulo="Descrição" max={3000} linhas={5} padrao={v("descricao")} erros={e.descricao} ajuda="Temperamento, cuidados, história. É o que convence alguém a adotar." className="sm:col-span-2" />
       </Bloco>
 
