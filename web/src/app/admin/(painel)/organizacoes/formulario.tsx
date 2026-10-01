@@ -130,7 +130,7 @@ export function FormularioOrganizacao({
 
       <Bloco titulo="Imagens">
         <CampoImagem nome="capaUrl" rotulo="Imagem de capa" padrao={inicial?.capaUrl} descricaoAlt="Capa da organização" erros={e.capaUrl} className="sm:col-span-2" />
-        <CampoGaleria nome="galeria" rotulo="Galeria de imagens" padrao={inicial?.galeria} descricaoAlt="Galeria da organização" erros={e.galeria} className="sm:col-span-2" />
+        <CampoGaleria nome="galeria" rotulo="Fotos de destaque" maximo={3} ajuda="Até 3 fotos. Aparecem no site, abaixo da capa." padrao={inicial?.galeria} descricaoAlt="Galeria da organização" erros={e.galeria} className="sm:col-span-2" />
       </Bloco>
 
       <Bloco titulo="Doações">

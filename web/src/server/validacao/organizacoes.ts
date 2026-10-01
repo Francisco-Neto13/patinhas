@@ -3,7 +3,7 @@ import "server-only";
 import { z } from "zod";
 import { reconhecerChavePix } from "@/lib/pix";
 import {
-  galeria,
+  galeriaAte,
   imagemOpcional,
   instagramOpcional,
   linkOpcional,
@@ -23,7 +23,9 @@ export const esquemaOrganizacao = z.object({
   estado: z.enum(UFS, { error: "Escolha o estado." }),
   endereco: textoOpcional(200),
   capaUrl: imagemOpcional,
-  galeria,
+  // O site mostra 3 fotos abaixo da capa. Mais que isso ficava guardado sem
+  // aparecer em lugar nenhum.
+  galeria: galeriaAte(3),
   /*
    * A chave é reconhecida (CPF, CNPJ, e-mail, celular ou aleatória) e gravada
    * normalizada. Chave inválida precisa ser barrada AQUI: o QR Code é gerado

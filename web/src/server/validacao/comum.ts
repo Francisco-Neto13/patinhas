@@ -76,9 +76,12 @@ export const imagemOpcional = z.preprocess(
 );
 
 /** Galeria: chega como várias entradas de mesmo nome no FormData. */
-export const galeria = z
-  .array(z.string().refine(ehUrlDeUpload, "Imagem inválida na galeria."))
-  .max(12, "No máximo 12 fotos na galeria.");
+export const galeriaAte = (maximo: number) =>
+  z
+    .array(z.string().refine(ehUrlDeUpload, "Imagem inválida na galeria."))
+    .max(maximo, `No máximo ${maximo} fotos na galeria. Remova as que sobrarem.`);
+
+export const galeria = galeriaAte(12);
 
 /**
  * WhatsApp aceita número OU link, porque é assim que as pessoas colam: às vezes

@@ -65,13 +65,24 @@ function BlocoOrganizacao({ organizacao: o, animais, pedidos }: { organizacao: O
   ].filter(Boolean) as { href: string; rotulo: string; Icone: typeof Globe }[];
 
   return (
-    <article className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14" aria-labelledby={`ong-${o.id}`}>
-      <Reveal>
+    // `items-start`: com `center`, a coluna de fotos (mais baixa) ficava solta no
+    // meio do texto, desalinhada do título.
+    <article className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14" aria-labelledby={`ong-${o.id}`}>
+      <Reveal className="lg:sticky lg:top-24">
         <div className="space-y-3">
           <div className="relative aspect-[4/3] overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-terracotta via-terracotta/85 to-brown shadow-md">
             {o.capaUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element -- já é WebP redimensionado no upload
-              <img src={o.capaUrl} alt={`Foto de ${o.nome}`} className="size-full object-cover" data-imagem-decorativa="" />
+              /*
+               * A capa aparece INTEIRA (`object-contain`): ONG costuma usar
+               * cartaz com texto, e cortar as bordas cortava o texto. O espaço
+               * que sobra é preenchido pela mesma imagem, desfocada.
+               */
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element -- já é WebP redimensionado no upload */}
+                <img src={o.capaUrl} alt="" aria-hidden="true" className="absolute inset-0 size-full scale-110 object-cover opacity-70 blur-2xl" data-imagem-decorativa="" />
+                {/* eslint-disable-next-line @next/next/no-img-element -- já é WebP redimensionado no upload */}
+                <img src={o.capaUrl} alt={`Foto de ${o.nome}`} className="relative size-full object-contain" data-imagem-decorativa="" />
+              </>
             ) : (
               <div className="flex size-full items-center justify-center" aria-hidden="true">
                 <PawPrint className="size-24 text-bone/40" />
