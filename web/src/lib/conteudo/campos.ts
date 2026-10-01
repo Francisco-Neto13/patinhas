@@ -154,10 +154,15 @@ export const GRUPOS_CONFIGURACAO: Grupo[] = [
     titulo: "Contato institucional",
     descricao: "Aparece no rodapé e na seção de contato do site.",
     campos: [
-      { chave: "config.email", rotulo: "E-mail institucional", tipo: "email", padrao: "contato@patinhas.exemplo.org", max: 200 },
+      // Sem padrão: em branco quer dizer "não temos", e o canal some do site.
+      // Com um padrão aqui, apagar o campo traria de volta um endereço falso.
       {
-        chave: "config.whatsapp", rotulo: "WhatsApp", tipo: "whatsapp", padrao: "https://wa.me/5500000000000", max: 200,
-        ajuda: "Número com DDD ou link wa.me.",
+        chave: "config.email", rotulo: "E-mail institucional", tipo: "email", padrao: "", max: 200,
+        ajuda: "Deixe em branco se não houver. Ele some do site.",
+      },
+      {
+        chave: "config.whatsapp", rotulo: "WhatsApp", tipo: "whatsapp", padrao: "", max: 200,
+        ajuda: "Número com DDD ou link wa.me. Deixe em branco se não houver.",
       },
       texto("config.telefone", "Telefone", "", 20),
     ],

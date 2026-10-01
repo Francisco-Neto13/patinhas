@@ -367,25 +367,32 @@ export function CtaContato({
           )}
         </Reveal>
 
-        <Reveal delay={0.15}>
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 text-sm text-taupe sm:flex-row">
-            <a
-              href={`mailto:${email}`}
-              className="inline-flex items-center gap-2 hover:text-terracotta-text"
-            >
-              <Mail className="size-4" /> {email}
-            </a>
-            <a
-              href={whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 hover:text-terracotta-text"
-            >
-              <MessageCircle className="size-4" /> WhatsApp
-              <span className="sr-only">(abre em nova aba)</span>
-            </a>
-          </div>
-        </Reveal>
+        {/* Cada canal só aparece se estiver preenchido nas Configurações. */}
+        {(email || whatsapp) && (
+          <Reveal delay={0.15}>
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 text-sm text-taupe sm:flex-row">
+              {email && (
+                <a
+                  href={`mailto:${email}`}
+                  className="inline-flex items-center gap-2 hover:text-terracotta-text"
+                >
+                  <Mail className="size-4" /> {email}
+                </a>
+              )}
+              {whatsapp && (
+                <a
+                  href={whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-terracotta-text"
+                >
+                  <MessageCircle className="size-4" /> WhatsApp
+                  <span className="sr-only">(abre em nova aba)</span>
+                </a>
+              )}
+            </div>
+          </Reveal>
+        )}
       </div>
     </section>
   );
